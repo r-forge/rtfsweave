@@ -361,14 +361,15 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
         }
 
         if (openSchunk) {
-            cat("\\par}\n", file = chunkout) # end the chunck
+            cat("\\par}\n", file = chunkout) # end the chunk
             linesout[thisline + 1L] <- srcline
             filenumout[thisline + 1L] <- srcfilenum
             thisline <- thisline + 1L
         }
 
         if (is.null(options$label) && options$split) close(chunkout)
-        ## START HERE
+
+        ## FIXME This has no analog in RTF
         if (options$split && options$include) {
             cat("\\input{", chunkprefix, "}\n", sep = "", file = object$output)
             linesout[thisline + 1L] <- srcline
@@ -393,8 +394,25 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
             }
 
             if (options$include) {
-                cat("\\includegraphics{", chunkprefix, "}\n", sep = "",
-                    file = object$output)
+                if (options$png) {
+                    imagefilename <- paste(chunkprefix, "png", sep = ".")
+                    if(options$hex) {
+                        size <- file.info(imagefilename)$size
+                        hex <- readBin(imagefilename, what = "raw", size)
+                        cat("\n{\\pict\\pngblip\n", file = object$output)
+                        cat(as.character(hex), file = object$output, fill = TRUE, sep = "")
+                        cat("}\n", file = object$output)
+                    }
+                    else {
+                        old.op <- options(useFancyQuotes = FALSE)
+                        cat("{\\field\\fldedit{\\*\\fldinst { INCLUDEPICTURE \\\\d",
+                            shQuote(imagefilename, "cmd"),
+                            "\\\\* MERGEFORMATINET }}{\\fldrslt { }}}",
+                            file = object$output,
+                            sep = "\n",
+                        options(old.op)
+                        }
+                    }
                 linesout[thisline + 1L] <- srcline
                 filenumout[thisline + 1L] <- srcfilenum
                 thisline <- thisline + 1L
@@ -405,7 +423,7 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
         object
     }
 }
-
+## START HERE
 RweaveRtfRuncode <- makeRweaveRtfCodeRunner()
 
 RweaveRtfWritedoc <- function(object, chunk)
