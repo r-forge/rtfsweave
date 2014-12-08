@@ -1,0 +1,9 @@
+2014-12-07    <weigand@R5018923>
+
+	* rtfSweave-source.Rnw: This is a noweb file that was my original
+	litterate programming effort. The rtfSweave package that is
+	available on r-forge is from tangling this file.  Subsequent
+	versions were called *-v2.Rnw and *-v3.Rnw but they are now
+	revisions of this file.
+
+
