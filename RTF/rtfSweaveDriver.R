@@ -96,8 +96,8 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
         wmf.Swd <- function(name, width, height, options, ...)
             grDevices::win.metafile(filename = paste(chunkprefix, "wmf", sep = "."),
                                     width = width, height = height,
-                                    pointsize = options$pointsize,
-                                    units = "in")
+                                    pointsize = options$pointsize)
+
         if (!(options$engine %in% c("R", "S"))) return(object)
 
         devs <- devoffs <- list()
