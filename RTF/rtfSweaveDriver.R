@@ -1,6 +1,7 @@
-#   File src/library/utils/R/SweaveDrivers.R
-#  Part of the R package, http://www.R-project.org
+#  RTF "port" of src/library/utils/R/SweaveDrivers.R
+#  which is part of the R package, http://www.R-project.org
 #
+#  Copyright (C) 2014 Stephen Weigand
 #  Copyright (C) 1995-2013 The R Core Team
 #
 #  This program is free software; you can redistribute it and/or modify
@@ -15,29 +16,33 @@
 #
 #  A copy of the GNU General Public License is available at
 #  http://www.r-project.org/Licenses/
+#
+# Things to worry about:
+# - RTF spec says encoding must be 7 bit ASCII
 
-RweaveLatex <- function()
+
+RweaveRtf <- function()
 {
-    list(setup = RweaveLatexSetup,
-         runcode = RweaveLatexRuncode,
-         writedoc = RweaveLatexWritedoc,
-         finish = RweaveLatexFinish,
-         checkopts = RweaveLatexOptions)
+    list(setup = RweaveRtfSetup,
+         runcode = RweaveRtfRuncode,
+         writedoc = RweaveRtfWritedoc,
+         finish = RweaveRtfFinish,
+         checkopts = RweaveRtfOptions)
 }
 
 ## We definitely do not want '.' in here, to avoid misidentification
 ## of file extensions.  Note that - is used literally here.
 .SweaveValidFilenameRegexp <- "^[[:alnum:]/#+_-]+$"
 
-RweaveLatexSetup <-
+RweaveRtfSetup <-
     function(file, syntax, output = NULL, quiet = FALSE, debug = FALSE,
-             stylepath, ...)
+             ...)
 {
     dots <- list(...)
     if (is.null(output)) {
         prefix.string <- basename(sub(syntax$extension, "", file))
-        output <- paste(prefix.string, "tex", sep = ".")
-    } else prefix.string <- basename(sub("\\.tex$", "", output))
+        output <- paste(prefix.string, "rtf", sep = ".")
+    } else prefix.string <- basename(sub("\\.rtf$", "", output))
 
     if (!quiet) cat("Writing to file ", output, "\n",
                    "Processing code chunks with options ...\n", sep = "")
@@ -45,47 +50,31 @@ RweaveLatexSetup <-
     if (encoding %in% c("ASCII", "bytes")) encoding <- ""
     output <- file(output, open = "w", encoding = encoding)
 
-    if (missing(stylepath)) {
-        p <- Sys.getenv("SWEAVE_STYLEPATH_DEFAULT")
-        stylepath <-
-            if (length(p) >= 1L && nzchar(p[1L])) identical(p, "TRUE") else FALSE
-    }
-    if (stylepath) {
-        styfile <- file.path(R.home("share"), "texmf", "tex", "latex", "Sweave")
-        if (.Platform$OS.type == "windows")
-            styfile <- chartr("\\", "/", styfile)
-        if (length(grep(" ", styfile)))
-            warning(gettextf("path to %s contains spaces,\n", sQuote(styfile)),
-                    gettext("this may cause problems when running LaTeX"),
-                    domain = NA)
-    } else styfile <- "Sweave"
-
     options <- list(prefix = TRUE, prefix.string = prefix.string,
                     engine = "R", print = FALSE, eval = TRUE, fig = FALSE,
-                    pdf = TRUE, eps = FALSE, png = FALSE, jpeg = FALSE,
+                    png = TRUE, jpeg = FALSE, wmf = FALSE,
+                    hex = TRUE,
                     grdevice = "", width = 6, height = 6, resolution = 300,
+                    pointsize = 12,
                     term = TRUE, echo = TRUE, keep.source = TRUE,
                     results = "verbatim",
                     split = FALSE, strip.white = "true", include = TRUE,
-                    pdf.version = grDevices::pdf.options()$version,
-                    pdf.encoding = grDevices::pdf.options()$encoding,
-                    pdf.compress = grDevices::pdf.options()$compress,
                     expand = TRUE, # unused by us, for 'highlight'
                     concordance = FALSE, figs.only = TRUE)
     options$.defaults <- options
     options[names(dots)] <- dots
 
     ## to be on the safe side: see if defaults pass the check
-    options <- RweaveLatexOptions(options)
+    options <- RweaveRtfOptions(options)
 
-    list(output = output, styfile = styfile, havesty = FALSE,
+    list(output = output,
          haveconcordance = FALSE, debug = debug, quiet = quiet,
          syntax = syntax, options = options,
          chunkout = list(), # a list of open connections
          srclines = integer())
 }
 
-makeRweaveLatexCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
+makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
 {
     ## Return a function suitable as the 'runcode' element
     ## of an Sweave driver.  evalFunc will be used for the
@@ -94,37 +83,25 @@ makeRweaveLatexCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
     ## If there were just one figure option set, we could eval the chunk
     ## only once.
     function(object, chunk, options) {
-        pdf.Swd <- function(name, width, height, ...)
-            grDevices::pdf(file = paste(chunkprefix, "pdf", sep = "."),
-                           width = width, height = height,
-                           version = options$pdf.version,
-                           encoding = options$pdf.encoding,
-                           compress = options$pdf.compress)
-        eps.Swd <- function(name, width, height, ...)
-            grDevices::postscript(file = paste(name, "eps", sep = "."),
-                                  width = width, height = height,
-                                  paper = "special", horizontal = FALSE)
         png.Swd <- function(name, width, height, options, ...)
             grDevices::png(filename = paste(chunkprefix, "png", sep = "."),
                            width = width, height = height,
+                           pointsize = options$pointsize,
                            res = options$resolution, units = "in")
         jpeg.Swd <- function(name, width, height, options, ...)
             grDevices::jpeg(filename = paste(chunkprefix, "jpeg", sep = "."),
                             width = width, height = height,
+                            pointsize = options$pointsize,
                             res = options$resolution, units = "in")
-
+        wmf.Swd <- function(name, width, height, options, ...)
+            grDevices::win.metafile(filename = paste(chunkprefix, "wmf", sep = "."),
+                                    width = width, height = height,
+                                    pointsize = options$pointsize,
+                                    units = "in")
         if (!(options$engine %in% c("R", "S"))) return(object)
 
         devs <- devoffs <- list()
         if (options$fig && options$eval) {
-            if (options$pdf) {
-                devs <- c(devs, list(pdf.Swd))
-                devoffs <- c(devoffs, list(grDevices::dev.off))
-            }
-            if (options$eps) {
-                devs <- c(devs, list(eps.Swd))
-                devoffs <- c(devoffs, list(grDevices::dev.off))
-            }
             if (options$png) {
                 devs <- c(devs, list(png.Swd))
                 devoffs <- c(devoffs, list(grDevices::dev.off))
@@ -133,6 +110,11 @@ makeRweaveLatexCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
                 devs <- c(devs, list(jpeg.Swd))
                 devoffs <- c(devoffs, list(grDevices::dev.off))
             }
+            if (options$wmf) {
+                devs <- c(devs, list(wmf.Swd))
+                devoffs <- c(devoffs, list(grDevices::dev.off))
+            }
+
             if (nzchar(grd <- options$grdevice)) {
                 devs <- c(devs, list(get(grd, envir = .GlobalEnv)))
                 grdo <- paste(grd, "off", sep = ".")
@@ -151,10 +133,9 @@ makeRweaveLatexCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
                 if (options$term) cat(" term")
                 cat("", options$results)
                 if (options$fig) {
-                    if (options$eps) cat(" eps")
-                    if (options$pdf) cat(" pdf")
                     if (options$png) cat(" png")
                     if (options$jpeg) cat(" jpeg")
+                    if (options$wmf) cat(" wmf")
                     if (!is.null(options$grdevice)) cat("", options$grdevice)
                 }
             }
@@ -167,13 +148,13 @@ makeRweaveLatexCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
             cat("\n")
         }
 
-        chunkprefix <- RweaveChunkPrefix(options)
+        chunkprefix <- utils::RweaveChunkPrefix(options)
 
         if (options$split) {
             ## [x][[1L]] avoids partial matching of x
             chunkout <- object$chunkout[chunkprefix][[1L]]
             if (is.null(chunkout)) {
-                chunkout <- file(paste(chunkprefix, "tex", sep = "."), "w")
+                chunkout <- file(paste(chunkprefix, "rtf", sep = "."), "w")
                 if (!is.null(options$label))
                     object$chunkout[[chunkprefix]] <- chunkout
                 if(!grepl(.SweaveValidFilenameRegexp, chunkout))
@@ -197,21 +178,23 @@ makeRweaveLatexCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
         putSinput <- function(dce, leading) {
             if (!openSinput) {
                 if (!openSchunk) {
-                    cat("\\begin{Schunk}\n", file = chunkout)
+                    ## FIXME: This should be from rtf.options()
+                    cat("{\\pard \\b0 \\ql \\sb120 \\sa120 \\f2 \\fs20\n", file = chunkout)
                     linesout[thisline + 1L] <<- srcline
                     filenumout[thisline + 1L] <<- srcfilenum
                     thisline <<- thisline + 1L
                     openSchunk <<- TRUE
                 }
-                cat("\\begin{Sinput}", file = chunkout)
+                cat("{\\i", file = chunkout)
                 openSinput <<- TRUE
             }
             leading <- max(leading, 1L) # safety check
-            cat("\n", paste(getOption("prompt"), dce[seq_len(leading)],
+            ## RTF line break without a new paragraph is '\line'
+            cat("\n", paste(getOption("prompt"), dce[seq_len(leading)], "\\line",
                             sep = "", collapse = "\n"),
                 file = chunkout, sep = "")
             if (length(dce) > leading)
-                cat("\n", paste(getOption("continue"), dce[-seq_len(leading)],
+                cat("\n", paste(getOption("continue"), dce[-seq_len(leading)], "\\line"
                                 sep = "", collapse = "\n"),
                     file = chunkout, sep = "")
             linesout[thisline + seq_along(dce)] <<- srcline
@@ -320,7 +303,7 @@ makeRweaveLatexCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
 
             if (length(output) && (options$results != "hide")) {
                 if (openSinput) {
-                    cat("\n\\end{Sinput}\n", file = chunkout)
+                    cat("\n}\n", file = chunkout) # end italics
                     linesout[thisline + 1L:2L] <- srcline
                     filenumout[thisline + 1L:2L] <- srcfilenum
                     thisline <- thisline + 2L
@@ -328,19 +311,20 @@ makeRweaveLatexCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
                 }
                 if (options$results == "verbatim") {
                     if (!openSchunk) {
-                        cat("\\begin{Schunk}\n", file = chunkout)
+                        ## FIXME This should be from rtf.options()
+                        cat("{\\pard \\b0 \\ql \\sb120 \\sa120 \\f2 \\fs20\n", file = chunkout)
                         linesout[thisline + 1L] <- srcline
                         filenumout[thisline + 1L] <- srcfilenum
                         thisline <- thisline + 1L
                         openSchunk <- TRUE
                     }
-                    cat("\\begin{Soutput}\n", file = chunkout)
+                    cat("\\line\n", file = chunkout)
                     linesout[thisline + 1L] <- srcline
                     filenumout[thisline + 1L] <- srcfilenum
                     thisline <- thisline + 1L
                 }
 
-                output <- paste(output, collapse = "\n")
+                output <- paste(output, collapse = ifelse(options$results == "rtf", "\n", "\\line\n")) #these are the results
                 if (options$strip.white %in% c("all", "true")) {
                     output <- sub("^[[:space:]]*\n", "", output)
                     output <- sub("\n[[:space:]]*$", "", output)
@@ -358,7 +342,7 @@ makeRweaveLatexCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
                 remove(output)
 
                 if (options$results == "verbatim") {
-                    cat("\n\\end{Soutput}\n", file = chunkout)
+                    cat("\n", file = chunkout)
                     linesout[thisline + 1L:2L] <- srcline
                     filenumout[thisline + 1L:2L] <- srcfilenum
                     thisline <- thisline + 2L
@@ -370,21 +354,21 @@ makeRweaveLatexCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
         if (options$keep.source) echoComments(length(srcfile$lines))
 
         if (openSinput) {
-            cat("\n\\end{Sinput}\n", file = chunkout)
+            cat("\n}\n", file = chunkout) # end italic
             linesout[thisline + 1L:2L] <- srcline
             filenumout[thisline + 1L:2L] <- srcfilenum
             thisline <- thisline + 2L
         }
 
         if (openSchunk) {
-            cat("\\end{Schunk}\n", file = chunkout)
+            cat("\\par}\n", file = chunkout) # end the chunck
             linesout[thisline + 1L] <- srcline
             filenumout[thisline + 1L] <- srcfilenum
             thisline <- thisline + 1L
         }
 
         if (is.null(options$label) && options$split) close(chunkout)
-
+        ## START HERE
         if (options$split && options$include) {
             cat("\\input{", chunkprefix, "}\n", sep = "", file = object$output)
             linesout[thisline + 1L] <- srcline
@@ -422,9 +406,9 @@ makeRweaveLatexCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
     }
 }
 
-RweaveLatexRuncode <- makeRweaveLatexCodeRunner()
+RweaveRtfRuncode <- makeRweaveRtfCodeRunner()
 
-RweaveLatexWritedoc <- function(object, chunk)
+RweaveRtfWritedoc <- function(object, chunk)
 {
     linesout <- attr(chunk, "srclines")
     filenumout <- attr(chunk, "srcFilenum")
@@ -481,7 +465,7 @@ RweaveLatexWritedoc <- function(object, chunk)
         opts <- sub(paste0(".*", object$syntax$docopt, ".*"),
                     "\\1", chunk[pos[1L]])
         object$options <- SweaveParseOptions(opts, object$options,
-                                             RweaveLatexOptions)
+                                             RweaveRtfOptions)
 
         if (isTRUE(object$options$concordance)
             && !object$haveconcordance) {
@@ -505,7 +489,7 @@ RweaveLatexWritedoc <- function(object, chunk)
     object
 }
 
-RweaveLatexFinish <- function(object, error = FALSE)
+RweaveRtfFinish <- function(object, error = FALSE)
 {
     outputname <- summary(object$output)$description
     if (!object$quiet && !error) {
