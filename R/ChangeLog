@@ -1,0 +1,6 @@
+2014-12-07    <weigand@R5018923>
+
+	* I included Sweave.R from the sources using
+	svn export http://svn.r-project.org/R/trunk/src/library/utils/R/SweaveDrivers.R
+	and SweaveDrivers.R the same way.
+
