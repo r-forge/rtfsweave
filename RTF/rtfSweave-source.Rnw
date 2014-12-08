@@ -345,11 +345,23 @@ can have a value of \code{true} or \code{TRUE}.
 These set the numeric options and the non-logical options. The Sweave
 version has options \code{pdf.version} and \code{pdf.encoding}
 which I don't need. So far I have not added any non-logical options.
-
+Note that I have changed the \code{res} option to \code{resolution}
+to match the option in the default driver. (I don't know if I like
+this.)
 <<options>>=
+    
+    ## numeric
     NUMOPTS <- c("width", "height", "resolution", "pointsize")
-    NOLOGOPTS <- c(NUMOPTS, "results", "prefix.string", "engine", 
-        "label", "strip.white") # "pdf.version", "pdf.encoding")
+
+    ## character: largely for safety, but 'label' matters as there
+    ## is no default (and someone uses "F")
+    CHAROPTS <- c("results", "prefix.string", "engine", "label",
+                  "strip.white", "pdf.version", "pdf.encoding", "grdevice")    ##
+
+
+    #NOLOGOPTS <- c(NUMOPTS, "results", "prefix.string", "engine", 
+    #    "label", "strip.white") # "pdf.version", "pdf.encoding")
+
 @ 
 
 This chunk basically cleans up the options so that numerics
@@ -357,18 +369,21 @@ are numeric and intended logicals are logical
 
 <<options>>= 
     for (opt in names(options)) {
-        if (!(opt %in% NOLOGOPTS)) {
-            oldval <- options[[opt]]
-            if (!is.logical(options[[opt]])) {
-                options[[opt]] <- c2l(options[[opt]])
-            }
-            if (is.na(options[[opt]])) 
-                stop(gettextf("invalid value for '%s' : %s", 
-                  opt, oldval), domain = NA)
-        }
-        else if (opt %in% NUMOPTS) {
-            options[[opt]] <- as.numeric(options[[opt]])
-        }
+        if(opt == ".defaults") next
+        oldval <- options[[opt]]
+        defval <- defaults[[opt]]
+        if(opt %in% CHAROPTS || is.character(defval)) {
+        } else if(is.logical(defval))
+            options[[opt]] <- c2l(oldval)
+        else if(opt %in% NUMOPTS || is.numeric(defval))
+            options[[opt]] <- as.numeric(oldval)
+        else if(!is.na(newval <- c2l(oldval)))
+            options[[opt]] <- newval
+        else if(!is.na(newval <- suppressWarnings(as.numeric(oldval))))
+            options[[opt]] <- newval
+        if (is.na(options[[opt]]))
+            stop(gettextf("invalid value for %s : %s", sQuote(opt), oldval),
+                 domain = NA)
     }
 @ 
 
@@ -381,10 +396,16 @@ set it to \code{verbatim}. Otherwise convert it
 it to lowercase and check that it is among the three valid choices.
 
 <<options>>= 
-    if (!is.null(options$results)) 
-        options$results <- tolower(as.character(options$results))
-    options$results <- match.arg(options$results, 
-                                 c("verbatim", "rtf", "hide"))
+if (!is.null(options$results)) {
+  res <- as.character(options$results)
+  if(tolower(res) != res) # documented as lower-case
+    warning("value of 'results' option should be lowercase",
+            call. = FALSE)
+  options$results <- tolower(res)
+}
+options$results <- match.arg(options$results, c("verbatim", "rtf", "hide"))
+
+
 @ 
 
 If the \code{strip.white} option is \code{NULL}, then set it to
