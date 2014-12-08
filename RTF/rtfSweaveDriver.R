@@ -431,26 +431,6 @@ RweaveRtfWritedoc <- function(object, chunk)
     linesout <- attr(chunk, "srclines")
     filenumout <- attr(chunk, "srcFilenum")
 
-    if (length(grep("\\usepackage[^\\}]*Sweave.*\\}", chunk)))
-        object$havesty <- TRUE
-
-    if (!object$havesty) {
- 	begindoc <- "^[[:space:]]*\\\\begin\\{document\\}"
- 	which <- grep(begindoc, chunk)
- 	if (length(which)) {
-            chunk[which] <- sub(begindoc,
-                                paste("\\\\usepackage{",
-                                      object$styfile,
-                                      "}\n\\\\begin{document}", sep = ""),
-                                chunk[which])
-            idx <- c(1L:which, which, seq(from = which+1L,
-                     length.out = length(linesout)-which))
-            linesout <- linesout[idx]
-            filenumout <- filenumout[idx]
-            object$havesty <- TRUE
-        }
-    }
-
     while(length(pos <- grep(object$syntax$docexpr, chunk)))
     {
         cmdloc <- regexpr(object$syntax$docexpr, chunk[pos[1L]])
@@ -468,9 +448,7 @@ RweaveRtfWritedoc <- function(object, chunk)
             ## protect against character(), because sub() will fail
             if (length(val) == 0L) val <- ""
         }
-        else val <- paste0("\\\\verb#<<", cmd, ">>#")
-        ## it's always debatable what \verb delim-character to use;
-        ## originally had '{' but that really can mess up LaTeX
+        else val <- paste0("{\\\\f2 <<", cmd, ">>}")
 
         chunk[pos[1L]] <- sub(object$syntax$docexpr, val, chunk[pos[1L]])
     }
@@ -493,7 +471,7 @@ RweaveRtfWritedoc <- function(object, chunk)
             object$options$label <- savelabel
             object$concordfile <- paste(prefix, "tex", sep = ".")
             chunk[pos[1L]] <- sub(object$syntax$docopt,
-                                  paste0("\\\\input{", prefix, "}"),
+                                  paste0("\\\\input{", prefix, "}"), ## No analog in RTF but leave it for now
                                   chunk[pos[1L]])
             object$haveconcordance <- TRUE
         } else
@@ -514,7 +492,7 @@ RweaveRtfFinish <- function(object, error = FALSE)
 	if(!file.exists(outputname))
 	    stop(gettextf("the output file '%s' has disappeared", outputname))
 	cat("\n",
-	    sprintf("You can now run (pdf)latex on %s", sQuote(outputname)),
+	    sprintf("You can now open %s", sQuote(outputname)),
 	    "\n", sep = "")
     }
     close(object$output)
@@ -523,7 +501,7 @@ RweaveRtfFinish <- function(object, error = FALSE)
     if (object$haveconcordance) {
     	## This output format is subject to change.  Currently it contains
     	## three or four parts, separated by colons:
-    	## 1.  The output .tex filename
+    	## 1.  The output .rtf filename
     	## 2.  The input .Rnw filename
     	## 3.  Optionally, the starting line number of the output coded as "ofs nn",
     	##     where nn is the offset to the first output line.  This is omitted if nn is 0.
@@ -556,8 +534,8 @@ RweaveRtfFinish <- function(object, error = FALSE)
     invisible(outputname)
 }
 
-## This is the check function for both RweaveLatex and Rtangle drivers
-RweaveLatexOptions <- function(options)
+## This is the check function similar to that used in RweaveLatex and Rtangle drivers
+RweaveRtfOptions <- function(options)
 {
     defaults <- options[[".defaults"]]
 
@@ -566,12 +544,12 @@ RweaveLatexOptions <- function(options)
         if (is.null(x)) FALSE else suppressWarnings(as.logical(x))
 
     ## numeric
-    NUMOPTS <- c("width", "height", "resolution")
+    NUMOPTS <- c("width", "height", "resolution", "pointsize")
 
     ## character: largely for safety, but 'label' matters as there
     ## is no default (and someone uses "F")
     CHAROPTS <- c("results", "prefix.string", "engine", "label",
-                  "strip.white", "pdf.version", "pdf.encoding", "grdevice")
+                  "strip.white", "grdevice")
 
 
     for (opt in names(options)) {
@@ -599,7 +577,7 @@ RweaveLatexOptions <- function(options)
                     call. = FALSE)
         options$results <- tolower(res)
     }
-    options$results <- match.arg(options$results, c("verbatim", "tex", "hide"))
+    options$results <- match.arg(options$results, c("verbatim", "rtf", "hide"))
 
     if (!is.null(options$strip.white)) {
         res <- as.character(options$strip.white)
@@ -614,179 +592,24 @@ RweaveLatexOptions <- function(options)
 }
 
 
-RweaveChunkPrefix <- function(options)
-{
-    if (!is.null(options$label)) {
-	if (options$prefix)
-	    paste0(options$prefix.string, "-", options$label)
-	else
-	    options$label
-    } else
-	paste0(options$prefix.string, "-",
-	       formatC(options$chunknr, flag = "0", width = 3))
-}
-
-RweaveEvalWithOpt <- function (expr, options)
-{
-    if (options$eval) {
-	## Note: try() as opposed to tryCatch() for back compatibility;
-	##       and  RweaveTryStop()  will work with it
-        res <- try(withVisible(eval(expr, .GlobalEnv)), silent = TRUE)
-        if (inherits(res, "try-error")) return(res)
-        if (options$print || (options$term && res$visible)) {
-            if (.isMethodsDispatchOn() && isS4(res$value))
-                methods:::show(res$value) else print(res$value)
-        }
-    }
-    res
-}
-
-RweaveTryStop <- function(err, options)
-{
-    if (inherits(err, "try-error")) { ## from  RweaveEvalWithOpt()
-        cat("\n")
-        msg <- paste(" chunk", options$chunknr)
-        if (!is.null(options$label))
-            msg <- paste0(msg, " (label = ", options$label, ")")
-        msg <- paste(msg, "\n")
-        stop(msg, err, call. = FALSE)
-    }
-}
-
 ###------------------------------------------------------------------------
+SweaveSyntaxRtf <- 
+  list(doc = "^@",
+       code = "^<<(.*)>>=.*",     
+       coderef = "^<<(.*)>>.*",   
+       docopt = "\\{\\\\SweaveOpts ([^\\}]*)\\}",      
+       docexpr = "\\{\\\\Sexpr ([^\\}]*)\\}", 
+       extension = "\\.[rsRS]?rtf$",
+       syntaxname = "\\{\\\\SweaveSyntax ([^\\}]*)\\}", 
+       input = "^[[:space:]]*\\\\SweaveInput\\{([^\\}]*)\\}",
+       trans = 
+       list(doc = "^@",                                         
+            code = "^<<\\1>>=",
+            coderef = "^<<\\1>>",
+            docopt = "{\\\\SweaveOpts \\1}",
+            docexpr = "{\\\\Sexpr \\1}",
+            extension = ".Rrtf",
+            syntaxname = "{\\\\SweaveSyntax SweaveSyntaxRtf}",
+            input = "{\\\\SweaveInput \\1}"))
 
-Rtangle <-  function()
-{
-    list(setup = RtangleSetup,
-         runcode = RtangleRuncode,
-         writedoc = RtangleWritedoc,
-         finish = RtangleFinish,
-         checkopts = RweaveLatexOptions)
-}
-
-
-RtangleSetup <-
-    function(file, syntax, output = NULL, annotate = TRUE, split = FALSE,
-             quiet = FALSE, ...)
-{
-    dots <- list(...)
-    if (is.null(output)) {
-        prefix.string <- basename(sub(syntax$extension, "", file))
-        ## This is odd, since for split = TRUE it uses the engine name.
-        output <- paste(prefix.string, "R", sep = ".")
-    } else
-        prefix.string <- basename(sub("\\.[rsRS]$", "", output))
-
-    if (!split) {
-        if (identical(output, "stdout")) output <- stdout()
-        else if (identical(output, "stderr")) output <- stderr()
-        else {
-            if (!quiet) cat("Writing to file", output, "\n")
-            ## We could at some future point try to write the file in
-            ## 'encoding'.
-            output <- file(output, open = "w")
-        }
-        lines <- c(sprintf("R code from vignette source '%s'", file),
-                   if(attr(file, "encoding") != "ASCII")
-                   sprintf("Encoding: %s", localeToCharset()[1L])
-                   )
-        lines <- c(paste("###", lines), "")
-        writeLines(lines, output)
-    } else {
-        if (!quiet) cat("Writing chunks to files ...\n")
-        output <- NULL
-    }
-
-    options <- list(split = split, prefix = TRUE,
-                    prefix.string = prefix.string,
-                    engine = "R", eval = TRUE,
-                    show.line.nos = FALSE)
-    options$.defaults <- options
-    options[names(dots)] <- dots
-
-    ## to be on the safe side: see if defaults pass the check
-    options <- RweaveLatexOptions(options)
-
-    list(output = output, annotate = annotate, options = options,
-         chunkout = list(), quiet = quiet, syntax = syntax)
-}
-
-
-RtangleRuncode <-  function(object, chunk, options)
-{
-    if (!(options$engine %in% c("R", "S"))) return(object)
-
-    chunkprefix <- RweaveChunkPrefix(options)
-
-    if (options$split) {
-        if(!grepl(.SweaveValidFilenameRegexp, chunkprefix))
-            warning("file stem ", sQuote(chunkprefix), " is not portable",
-                    call. = FALSE, domain = NA)
-        outfile <- paste(chunkprefix, options$engine, sep = ".")
-        if (!object$quiet) cat(options$chunknr, ":", outfile,"\n")
-        ## [x][[1L]] avoids partial matching of x
-        chunkout <- object$chunkout[chunkprefix][[1L]]
-        if (is.null(chunkout)) {
-            chunkout <- file(outfile, "w")
-            if (!is.null(options$label))
-                object$chunkout[[chunkprefix]] <- chunkout
-        }
-    } else
-        chunkout <- object$output
-
-    if (object$annotate) {
-        lnos <- grep("^#line ", chunk, value = TRUE)
-        if(length(lnos)) {
-            srclines <- attr(chunk, "srclines")
- ##         srcfilenum <- attr(chunk, "srcFilenum")
-            ## this currently includes the chunk header
-            lno <- if (length(srclines)) paste(min(srclines), max(srclines), sep = "-") else srclines
-            fn <- sub('[^"]*"([^"]+).*', "\\1", lnos[1L])
-        }
-        cat("###################################################\n",
-            "### code chunk number ", options$chunknr,
-            ": ",
-            if(!is.null(options$label)) options$label
-            else paste(fn, lno, sep = ":"),
-            ifelse(options$eval, "", " (eval = FALSE)"), "\n",
-            "###################################################\n",
-            file = chunkout, sep = "")
-    }
-
-    ## The next returns a character vector of the logical options
-    ## which are true and have hooks set.
-    hooks <- SweaveHooks(options, run = FALSE)
-    for (k in hooks)
-        cat("getOption(\"SweaveHooks\")[[\"", k, "\"]]()\n",
-            file = chunkout, sep = "")
-
-    if (!options$show.line.nos)
-        chunk <- grep("^#line ", chunk, value = TRUE, invert = TRUE)
-    if (!options$eval) chunk <- paste("##", chunk)
-    cat(chunk, "\n", file = chunkout, sep = "\n")
-    if (is.null(options$label) && options$split) close(chunkout)
-    object
-}
-
-RtangleWritedoc <- function(object, chunk)
-{
-    while(length(pos <- grep(object$syntax$docopt, chunk))) {
-        opts <- sub(paste0(".*", object$syntax$docopt, ".*"),
-                    "\\1", chunk[pos[1L]])
-        object$options <- SweaveParseOptions(opts, object$options,
-                                             RweaveLatexOptions)
-        chunk[pos[1L]] <- sub(object$syntax$docopt, "", chunk[pos[1L]])
-    }
-    object
-}
-
-
-RtangleFinish <- function(object, error = FALSE)
-{
-    ## might be stdout() or stderr()
-    if (!is.null(object$output) && object$output >= 3)
-        close(object$output)
-
-    if (length(object$chunkout))
-        for (con in object$chunkout) close(con)
-}
+class(SweaveSyntaxRtf) <- "SweaveSyntax"

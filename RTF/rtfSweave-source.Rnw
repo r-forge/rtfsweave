@@ -1026,7 +1026,7 @@ if (options$fig && options$eval) {
 
 It's here that I include the graphics. The canonical way to
 include graphics in an RTF file is to use the the \code{\textbackslash pict} tag
-with \code{\textbackslash pngblib},
+with \code{\textbackslash pngblip},
 \code{\textbackslash jpegblip}, or \code{\textbackslash emfblip} followed
 by a hex representation of the image binary. This would look like this.
 
