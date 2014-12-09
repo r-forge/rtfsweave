@@ -10,21 +10,11 @@
 {\f1\fswiss Arial;}
 {\f2\fmodern Courier New;}
 }
-{\colortbl
-;
-\red0\green70\blue173;
-\red182\green0\blue20;
-\red169\green169\blue169;
-\red222\green235\blue247;
-\red255\green255\blue0;
-\red229\green229\blue229;
-}
-\deflang1033\plain \ftnbj
 \paperw12240 \paperh15840 \margl1440 \margr1440 \margt1440 \margb1440
 
-{\pard \fs24 \qc \b rtfSweave Eample 1\par}
-{\pard \fs22 \qc \b Stephen Weigand\par}
-{\pard \fs22 \qc \b December 8, 2014\par}
+{\pard \sb1440 \sa180 \fs24 \qc \b rtfSweave Eample 1\par}
+{\pard \sa180 \fs22 \qc \b Stephen Weigand\par}
+{\pard \sa180 \fs22 \qc \b December 8, 2014\par}
 \
 \
 
@@ -41,7 +31,7 @@ which shows that the location parameter of the Ozone
  include a boxplot of the data:\
 
 {\pard \qc
-<<fig = TRUE, height = 4, width = 4, pointsize = 10, echo = FALSE, hex = FALSE>>=
+<<fig = TRUE, height = 4, width = 4, pointsize = 10, echo = FALSE, hex = TRUE>>=
 boxplot(Ozone ~ Month, data = airquality)
 @ 
 \par}
