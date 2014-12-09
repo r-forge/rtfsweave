@@ -1,3 +1,14 @@
+2014-12-08    <weigand@R5018923>
+
+	* test1.Rrtf: This is an example file similar
+	to the mini example in the Sweave manual.
+
+	* rtfSweaveDriver.R (echoComments): This a "first draft"
+	of the RTF port of R's SweaveDrivers.R. I think it is
+	working OK. It does not need to be part of a package.
+	Just source the file and then
+	R> Sweave(myfile.Rrtf, driver = RweaveRtf()).
+
 2014-12-07    <weigand@R5018923>
 
 	* rtfSweave-source.Rnw: This is a noweb file that was my original
