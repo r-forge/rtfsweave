@@ -1074,7 +1074,7 @@ if (options$include) {
       size <- file.info(paste(chunkprefix, "png", sep = "."))$size
       hex <- readBin(paste(chunkprefix, "png", sep = "."), what = "raw", size)
       cat("\n{\\pict\\pngblip\n", file = object$output, append = TRUE)
-      ## New approach to avoid cat which is slow on my Windows machine
+      ## New approach to avoid cat which is slow writing to a share on my Windows machine
       sink(object$output, append = TRUE)
       writeLines(as.character(hex))
       sink()
