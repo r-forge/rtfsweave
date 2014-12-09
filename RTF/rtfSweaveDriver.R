@@ -148,7 +148,7 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
             cat("\n")
         }
 
-        chunkprefix <- utils::RweaveChunkPrefix(options)
+        chunkprefix <- RweaveChunkPrefix(options)
 
         if (options$split) {
             ## [x][[1L]] avoids partial matching of x
@@ -178,7 +178,6 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
         putSinput <- function(dce, leading) {
             if (!openSinput) {
                 if (!openSchunk) {
-                    ## FIXME: This should be from rtf.options()
                     cat("{\\pard \\b0 \\ql \\sb120 \\sa120 \\f2 \\fs20\n", file = chunkout)
                     linesout[thisline + 1L] <<- srcline
                     filenumout[thisline + 1L] <<- srcfilenum
@@ -194,7 +193,7 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
                             sep = "", collapse = "\n"),
                 file = chunkout, sep = "")
             if (length(dce) > leading)
-                cat("\n", paste(getOption("continue"), dce[-seq_len(leading)], "\\line"
+                cat("\n", paste(getOption("continue"), dce[-seq_len(leading)], "\\line",
                                 sep = "", collapse = "\n"),
                     file = chunkout, sep = "")
             linesout[thisline + seq_along(dce)] <<- srcline
@@ -311,14 +310,14 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
                 }
                 if (options$results == "verbatim") {
                     if (!openSchunk) {
-                        ## FIXME This should be from rtf.options()
                         cat("{\\pard \\b0 \\ql \\sb120 \\sa120 \\f2 \\fs20\n", file = chunkout)
                         linesout[thisline + 1L] <- srcline
                         filenumout[thisline + 1L] <- srcfilenum
                         thisline <- thisline + 1L
                         openSchunk <- TRUE
                     }
-                    cat("\\line\n", file = chunkout)
+                    ## No '\\line' here.
+                    cat("\n", file = chunkout)
                     linesout[thisline + 1L] <- srcline
                     filenumout[thisline + 1L] <- srcfilenum
                     thisline <- thisline + 1L
@@ -369,7 +368,7 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
 
         if (is.null(options$label) && options$split) close(chunkout)
 
-        ## FIXME This has no analog in RTF
+        ## NOTE: This has no analog in RTF
         if (options$split && options$include) {
             cat("\\input{", chunkprefix, "}\n", sep = "", file = object$output)
             linesout[thisline + 1L] <- srcline
@@ -409,7 +408,7 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
                             shQuote(imagefilename, "cmd"),
                             "\\\\* MERGEFORMATINET }}{\\fldrslt { }}}",
                             file = object$output,
-                            sep = "\n",
+                            sep = "\n")
                         options(old.op)
                         }
                     }
