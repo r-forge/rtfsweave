@@ -400,7 +400,6 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
                         hex <- readBin(imagefilename, what = "raw", size)
                         cat("\n{\\pict\\pngblip\n", file = object$output)
                         cat(as.character(hex), file = object$output, fill = TRUE, sep = "")
-                        message("ending hex write")
                         cat("}\n", file = object$output)
                     }
                     else {
