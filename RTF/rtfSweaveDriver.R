@@ -52,8 +52,7 @@ RweaveRtfSetup <-
 
     options <- list(prefix = TRUE, prefix.string = prefix.string,
                     engine = "R", print = FALSE, eval = TRUE, fig = FALSE,
-                    png = TRUE, jpeg = FALSE, wmf = FALSE,
-                    hex = TRUE,
+                    png = TRUE, jpeg = FALSE, wmf = FALSE, hex = TRUE,
                     grdevice = "", width = 6, height = 6, resolution = 300,
                     pointsize = 12,
                     term = TRUE, echo = TRUE, keep.source = TRUE,
@@ -322,7 +321,8 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
                     filenumout[thisline + 1L] <- srcfilenum
                     thisline <- thisline + 1L
                 }
-
+                ## I should check this.
+                ## output <- paste(output, collapse = "\n")
                 output <- paste(output, collapse = ifelse(options$results == "rtf", "\n", "\\line\n")) #these are the results
                 if (options$strip.white %in% c("all", "true")) {
                     output <- sub("^[[:space:]]*\n", "", output)
@@ -403,15 +403,45 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
                         cat("}\n", file = object$output)
                     }
                     else {
-                        old.op <- options(useFancyQuotes = FALSE)
                         cat("{\\field\\fldedit{\\*\\fldinst { INCLUDEPICTURE \\\\d",
                             shQuote(imagefilename, "cmd"),
                             "\\\\* MERGEFORMATINET }}{\\fldrslt { }}}",
                             file = object$output,
                             sep = "\n")
-                        options(old.op)
                         }
+                } else if (options$jpeg) {
+                    imagefilename <- paste(chunkprefix, "jpeg", sep = ".")
+                    if(options$hex) {
+                        size <- file.info(imagefilename)$size
+                        hex <- readBin(imagefilename, what = "raw", size)
+                        cat("\n{\\pict\\jpegblip\n", file = object$output)
+                        cat(as.character(hex), file = object$output, fill = TRUE, sep = "")
+                        cat("}\n", file = object$output)
                     }
+                    else {
+                        cat("{\\field\\fldedit{\\*\\fldinst { INCLUDEPICTURE \\\\d",
+                            shQuote(imagefilename, "cmd"),
+                            "\\\\* MERGEFORMATINET }}{\\fldrslt { }}}",
+                            file = object$output,
+                            sep = "\n")
+                    }
+                } else if (options$wmf) {
+                    imagefilename <- paste(chunkprefix, "wmf", sep = ".")
+                    if(options$hex) {
+                        size <- file.info(imagefilename)$size
+                        hex <- readBin(imagefilename, what = "raw", size)
+                        cat("\n{\\pict\\emfblip\n", file = object$output)
+                        cat(as.character(hex), file = object$output, fill = TRUE, sep = "")
+                        cat("}\n", file = object$output)
+                    }
+                    else {
+                        cat("{\\field\\fldedit{\\*\\fldinst { INCLUDEPICTURE \\\\d",
+                            shQuote(imagefilename, "cmd"),
+                            "\\\\* MERGEFORMATINET }}{\\fldrslt { }}}",
+                            file = object$output,
+                            sep = "\n")
+                    }
+                }
                 linesout[thisline + 1L] <- srcline
                 filenumout[thisline + 1L] <- srcfilenum
                 thisline <- thisline + 1L
@@ -422,7 +452,7 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
         object
     }
 }
-## START HERE
+
 RweaveRtfRuncode <- makeRweaveRtfCodeRunner()
 
 RweaveRtfWritedoc <- function(object, chunk)
@@ -459,8 +489,9 @@ RweaveRtfWritedoc <- function(object, chunk)
     {
         opts <- sub(paste0(".*", object$syntax$docopt, ".*"),
                     "\\1", chunk[pos[1L]])
-        object$options <- SweaveParseOptions(opts, object$options,
-                                             RweaveRtfOptions)
+        ## FIXME
+        object$options <- utils:::SweaveParseOptions(opts, object$options,
+                                                     RweaveRtfOptions)
 
         if (isTRUE(object$options$concordance)
             && !object$haveconcordance) {
