@@ -1,0 +1,15 @@
+2015-04-03  Stephen Weigand  <Weigand.Stephen@mayo.edu>
+
+	* DESCRIPTION Several updates to align with current version of R
+	- I now use Authors@R
+	- I now include 'grDevices' in the 'Imports:' line. This is because
+	  my code includes lines like 'grDevices::dev.off()'.
+
+	* NAMESPACE I now have 'import(utils, grDevices)' rather
+	than 'import(utils)'.
+
+	* ?????: I am confused about whether my R code needs '::' because I am
+	importing these packages in my 'NAMESPACE' file. I may also want to
+	change my NAMESPACE file to use 'importFrom(grDevices, png, jpeg)'.
+	The latter is used when only a few things need to be imported.
+

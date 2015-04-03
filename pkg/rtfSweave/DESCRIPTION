@@ -15,6 +15,6 @@ Description: This package provides an Sweave driver that allows
  collaborate primarily with
  Word users but would otherwise prefer to use Sweave with LaTeX. 
 License: GPL (>= 2)
-Imports: utils
+Imports: utils, grDevices
 BuildVignettes: no
 NeedsCompilation: no

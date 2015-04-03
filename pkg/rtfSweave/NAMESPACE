@@ -1,2 +1,2 @@
 export(RweaveRtf, SweaveSyntaxRtf)
-import(utils)
+import(utils, grDevices)
