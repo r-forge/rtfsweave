@@ -1,3 +1,8 @@
+2015-04-03  Stephen Weigand  <Weigand.Stephen@mayo.edu>
+
+	* rtfSweaveDriver.R (RweaveRtfWritedoc): Added 'domain = NA' in stop(...
+	so that it reflected changes made in r68088 of SweaveDriver.R.
+
 2014-12-08    <weigand@R5018923>
 
 	* test1.Rrtf: This is an example file similar
