@@ -10,9 +10,10 @@
 	* SweaveDrivers.r68088.R was obtained with
 	shell> svn export -r68088 http://svn.r-project.org/R/trunk/src/library/utils/R/SweaveDrivers.R
 
+	* Note that 
 2014-12-07    <weigand@R5018923>
 
 	* I included Sweave.R from the sources using
 	svn export http://svn.r-project.org/R/trunk/src/library/utils/R/SweaveDrivers.R
-	and SweaveDrivers.R the same way.
+	and Sweave.R the same way.
 
