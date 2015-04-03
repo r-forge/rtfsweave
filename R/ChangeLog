@@ -1,4 +1,13 @@
 2015-04-03  Stephen Weigand  <Weigand.Stephen@mayo.edu>
+	* Sweave.R in the current directory was renamed via:
+	shell> svn mv Sweave.R SweaveDrivers.r65759.R
+	to have the name reflect the revision number.
+
+	* Sweave.r65759.R was obtained with
+	shell> svn export -r65759 http://svn.r-project.org/R/trunk/src/library/utils/R/SweaveDrivers.R
+
+	* SweaveDrivers.r67165.R was obtained with
+	shell> svn export -r67165 http://svn.r-project.org/R/trunk/src/library/utils/R/SweaveDrivers.R
 
 	* SweaveDrivers.R in the current directory was renamed via:
 	shell> svn mv SweaveDrivers.R SweaveDrivers.r66798.R
@@ -10,7 +19,6 @@
 	* SweaveDrivers.r68088.R was obtained with
 	shell> svn export -r68088 http://svn.r-project.org/R/trunk/src/library/utils/R/SweaveDrivers.R
 
-	* Note that 
 2014-12-07    <weigand@R5018923>
 
 	* I included Sweave.R from the sources using
