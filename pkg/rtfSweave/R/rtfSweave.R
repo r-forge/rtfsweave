@@ -152,8 +152,7 @@ if (options$split) {
     if (!is.null(options$label)) 
       object$chunkout[[chunkprefix]] <- chunkout
   }
-}
-else chunkout <- object$output
+} else chunkout <- object$output
 saveopts <- options(keep.source = options$keep.source)
 on.exit(options(saveopts))
 SweaveHooks(options, run = TRUE)
@@ -516,11 +515,12 @@ while (length(pos <- grep(object$syntax$docexpr, chunk))) {
                    })
             ## protect against character(), because sub() will fail
             if (length(val) == 0L) val <- ""
-        }
-  }
-  else val <- paste("{\\f2 <<", # keep line break!! Otherwise noweb requires
-                    cmd,        # '@' prior to paired angle brackets here
-                    ">>}", sep = "")
+}
+            else val <- paste("{\\f2 <<", # keep line break!! Otherwise noweb requires
+                             cmd,        # '@' prior to paired angle brackets here
+                             ">>}", sep = "")
+            
+    
   chunk[pos[1]] <- sub(object$syntax$docexpr, val, chunk[pos[1]])
 }
 ## while (length(pos <- grep(object$syntax$docopt, chunk))) {
@@ -547,7 +547,7 @@ while(length(pos <- grep(object$syntax$docopt, chunk)))
     {
         opts <- sub(paste0(".*", object$syntax$docopt, ".*"),
                     "\\1", chunk[pos[1L]])
-        object$options <- SweaveParseOptions(opts, object$options,
+        object$options <- utils:::SweaveParseOptions(opts, object$options,
                                              RweaveLatexOptions)
         
         if (isTRUE(object$options$concordance)
@@ -561,8 +561,9 @@ while(length(pos <- grep(object$syntax$docopt, chunk)))
                                   paste0("\\\\input{", prefix, "}"),
                                   chunk[pos[1L]])
             object$haveconcordance <- TRUE
-        } else
+        } else {
             chunk[pos[1L]] <- sub(object$syntax$docopt, "", chunk[pos[1L]])
+        }
     }
 
 cat(chunk, sep = "\n", file = object$output)#, append = TRUE)
@@ -592,7 +593,7 @@ RweaveRtfFinish <- function (object, error = FALSE) {
     ##    special <- paste("\\special{concordance:", outputname, 
     ##        ":", inputname, ":%\n", concordance, "}\n", sep = "")
     ##    cat(special, file = object$concordfile)
-    ##}
+    ##}c
     invisible(outputname)
 }
 RweaveRtfOptions <- function (options) {
@@ -658,7 +659,7 @@ options$strip.white <-
     match.arg(options$strip.white, c("true", "false", "all"))
 options
 }
-RweaveRtf <- function(){
+RweaveRtf <- function(){ # OK
   list(setup = RweaveRtfSetup,    
        runcode = RweaveRtfRuncode,  
        writedoc = RweaveRtfWritedoc, 
