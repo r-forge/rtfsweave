@@ -1,3 +1,9 @@
+2015-04-06  Stephen Weigand  <Weigand.Stephen@mayo.edu>
+
+	* rtfSweaveDriver.R: I added my name as part of the
+	top comment lines of the file. I will next copy this
+	to pkg/rtfSweave/R.
+
 2015-04-03  Stephen Weigand  <Weigand.Stephen@mayo.edu>
 
 	* rtfSweaveDriver.R (RweaveRtfWritedoc): Added 'domain = NA' in stop(...
