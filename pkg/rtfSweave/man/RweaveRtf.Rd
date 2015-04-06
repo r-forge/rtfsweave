@@ -43,7 +43,7 @@ SweaveSyntaxRtf
   created with \code{Sweave} to RTF, it is arguably simpler to write the
   document in RTF directly, and use \code{Sweave} to create the final
   report which can be sent to colleagues as is or after saving in
-  a native Microsoft Word format (e.g., \code{*.doc} or \code{*.docx}.
+  a native Microsoft Word format (e.g., \code{*.doc} or \code{*.docx}).
   
 }
 
@@ -64,7 +64,7 @@ SweaveSyntaxRtf
   is saved and then parse the code chunk. In other words, it may not be
   possible to \dQuote{sanitize} a code chunk saved in Word but it
   should be pretty easy to sanitize a code chunk saved in WordPad.
-
+}
 \author{Stephen Weigand \email{Weigand.Stephen@mayo.edu} adapted the
   code of Friedrich Leisch and others}
 
