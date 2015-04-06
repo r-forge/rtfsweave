@@ -1,11 +1,9 @@
-## NOTE: THIS IS A COPY. THE ACTIVE FILE IS IN pkg/rtfSweave/R
-
 ###############################################################
 ##  RTF "port" of src/library/utils/R/SweaveDrivers.R        ##
 ##  which is part of the R package, http://www.R-project.org ##
 ##  Written by Stephen Weiand <Weigand.Stephen@mayo.edu>     ##
 ###############################################################
-##
+##  
 ##  Copyright (C) 1995-2014 The R Core Team
 ##
 ##  This program is free software; you can redistribute it and/or modify
@@ -21,10 +19,11 @@
 ##  A copy of the GNU General Public License is available at
 ##  http://www.r-project.org/Licenses/
 ##
-
+###############################################################
 
 ## Things to worry about:
-## - RTF spec says encoding must be 7 bit ASCII
+## - RTF spec says encoding must be 7 bit ASCII. I can possibly
+##   check that and give a warning.
 
 
 RweaveRtf <- function()
@@ -495,7 +494,9 @@ RweaveRtfWritedoc <- function(object, chunk)
     {
         opts <- sub(paste0(".*", object$syntax$docopt, ".*"),
                     "\\1", chunk[pos[1L]])
-        ## FIXME
+        ## SweaveParseOptions is not exported. I do what the 'ascii' package
+        ## does. ('R2HTML' copies in the function from r45768 and calls it
+        ## InternalSweaveParseOptions        
         object$options <- utils:::SweaveParseOptions(opts, object$options,
                                                      RweaveRtfOptions)
 
