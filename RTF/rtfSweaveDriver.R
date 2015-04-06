@@ -1,24 +1,30 @@
-#  RTF "port" of src/library/utils/R/SweaveDrivers.R
-#  which is part of the R package, http://www.R-project.org
-#
-#  Copyright (C) 2014 Stephen Weigand
-#  Copyright (C) 1995-2013 The R Core Team
-#
-#  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  A copy of the GNU General Public License is available at
-#  http://www.r-project.org/Licenses/
-#
-# Things to worry about:
-# - RTF spec says encoding must be 7 bit ASCII
+## NOTE: THIS IS A COPY. THE ACTIVE FILE IS IN pkg/rtfSweave/R
+
+###############################################################
+##  RTF "port" of src/library/utils/R/SweaveDrivers.R        ##
+##  which is part of the R package, http://www.R-project.org ##
+##  Written by Stephen Weiand <Weigand.Stephen@mayo.edu>     ##
+###############################################################
+##
+##  Copyright (C) 1995-2014 The R Core Team
+##
+##  This program is free software; you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation; either version 2 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details. 
+##
+##  A copy of the GNU General Public License is available at
+##  http://www.r-project.org/Licenses/
+##
+
+
+## Things to worry about:
+## - RTF spec says encoding must be 7 bit ASCII
 
 
 RweaveRtf <- function()
