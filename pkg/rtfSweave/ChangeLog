@@ -1,3 +1,7 @@
+2015-04-07  Stephen Weigand  <Weigand.Stephen@mayo.edu>
+
+	* vignette/rtfSweave-intro.pdf was added.
+
 2015-04-03  Stephen Weigand  <Weigand.Stephen@mayo.edu>
 
 	* DESCRIPTION Several updates to align with current version of R
