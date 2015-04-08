@@ -23,7 +23,7 @@ In this document I try to provide some very basic information about
 RTF and show how to use the \pkg{rtfSweave} package with
 \code{Sweave} to make RTF statistical reports.  For me, the key to understanding
 RTF was reading the excellent \emph{RTF Pocket Guide} by Sean
-Burke\cite{RTFPocketGuide}.  It covers important aspects of RTF and only after reading it did I
+Burke\cite{guide}.  It covers important aspects of RTF and only after reading it did I
 find that the RTF specifications published
 by Microsoft made some sense. The \emph{Pocket Guide} can be downloaded as a PDF from
 the publisher's website (currently
@@ -56,34 +56,42 @@ short paragraphs with special formatting and not structural elements.
 %In this way, RTF behaves like a page markup language
 
 %% The \emph{RTF Pocket Guide} is an excellent basic introduction to
-%% RTF\cite{RTFPocketGuide} and the latest RTF version specification can
+%% RTF\cite{guide} and the latest RTF version specification can
 %% be downloaded from Microsoft as a MS Word document.
 
 At this point, it may make sense to show an example of an RTF document. Here
 is the ``Hello, world!'' example from the \emph{Pocket Guide}. Note
-that RTF has no built-in comments so I am using \texttt{<-} to indicate
-``pseudo-comments.''
+that RTF has no built-in comments so I am using ``\texttt{//}'' to indicate
+``pseudo-comments'' which annotate the file.
 
+\begin{figure}[htbp]
+  \centering
 \begin{minipage}{0.9\textwidth}
 \begin{verbatim}
-{\rtf1                 <- RTF version 1, your only choice
-\ansi                  <- Document is in the ANSI character set 
+{\rtf1                 // RTF version 1, your only choice
+\ansi                  // Document is in the ANSI character set 
 
-\deff0                 <- Default font is font 0
-\deflang1033           <- Default language code 1033 = en-us
-\plain \fs24           <- Plain format has fontsize 24/2 = 12 points
+\deff0                 // Default font is font 0, defined below
+\deflang1033           // Default language code 1033 = en-us
+\plain \fs24           // Plain format has fontsize 24/2 = 12 points
 
-{\fonttbl              <- Font table
-{\f0 Times New Roman;} <- Font 0 defined as Times New Roman
-{\f1 Arial;}           <- Font 1 defined as Arial
+{\fonttbl              // Font table
+{\f0 Times New Roman;} // Font 0 defined as Times New Roman
+{\f1 Arial;}           // Font 1 defined as Arial
 }
 
-{\pard                 <- New paragraph set with "plain" formatting
+{\pard \fs28 \b        // Paragraph set at 28/2 = 14 pts in bold
+Greeting               //   to resemble a level-1 heading
+\par}                  // End paragraph
+
+{\pard                 // New paragraph set with "plain" formatting
 Hello, World!
-\par}                  <- End paragraph
+\par}                  // End paragraph
 }
 \end{verbatim}
 \end{minipage}
+\caption{An annotated RTF version of ``Hello, World!''}
+\end{figure}
 
 \section{Document prolog}
 
@@ -95,33 +103,46 @@ group containing metadata (optional).
 
 RTF has a paragraph entity, but no heading entities. This means that
 headings are just paragraphs with special formatting such as boldface
-type. Following the {\emph Pocket Guide}\cite{RTFPocketGuide},
+type. Following the {\emph Pocket Guide}\cite{guide},
 paragraphs are written using the following form.\footnote{Note that there are
  no spaces at the end of these lines. If there were they would
  show up as extraneous spaces in the document. Blank lines don't matter in RTF but spaces do.}
+
 \begin{verbatim}
 {\pard
 A short paragraph.
 \par}
 \end{verbatim}
 
-Formatting instructions for the paragraph can be put on the first line
-and following the \texttt{\textbackslash pard} command. To illustrate,
-the following paragraph has six points (120 so-called twips\footnote{A twip is a standard unit of measurement
- in RTF and equals one twentieth of a point. If there are 72 points to an inch, there are
- $72 \times 20 = 1440$ twips per) of space before the
-the paragraph (\texttt{\textbackslash sb120}}) and the same amount after the paragraph
-\texttt{\textbackslash sa120}). The paragraph is displayed in the default 
-font (font zero, i.e., \texttt{\textbackslash f0}) at a font size of 12 points, or 24 half points
-(\texttt{\textbackslash fs24}).
+Formatting instructions for the paragraph can follow the
+\texttt{\textbackslash pard} command on the same line.  For many
+size-related commands, the units are in ``twips'' where one twip
+equals one twentieth of a point. (If 20 twips equals 1 point, and 72
+points/inch, then there are $72 \times 20 = 1440$ twips per
+inch.\footnote{My guess is that twips were used to allow RTF commands
+  to be specified in integer units.}) One exception is that text sizes
+are specified in half points.  To illustrate, the following paragraph
+has 120 twips (six points) of space before and after the paragraph and
+is set in font zero at 24 half points (12 points). A single space after the RTF commands
+is optional but helps readability.
+%%\footnote{A twip is a standard unit of measurement
+%% in RTF and equals one twentieth of a point. If there are 72 points to an inch, there are
+%% $72 \times 20 = 1440$ twips per) of space before the
+%%the paragraph (\texttt{\textbackslash sb120}}) and the same amount after the paragraph
+%%\texttt{\textbackslash sa120}). The paragraph is displayed in the default 
+%%font (font zero, i.e., \texttt{\textbackslash f0}) at a font size of 12 points, or 24 half points
+%%(\texttt{\textbackslash fs24}).
+
+\begin{minipage}{0.9\textwidth}
 \begin{verbatim}
 {\pard \sb120 \sa120 \f0 \fs24
 A short paragraph.
 \par}
 \end{verbatim}
+\end{minipage}
 
 If the paragraph you are writing is more than one line, a helpful
-format is to indent everything after the first line with a space.
+way to handle spaces is to indent everything after the first line with a space.
 That way, it will be easy to see that there are no inadvertent spaces
 at the end of a line. This is an example.
 \begin{verbatim}
@@ -137,17 +158,23 @@ A heading paragraph is similar but with additional formatting
 instructions. The following creates the appearance of a heading by being displayed in
 font 1 (\texttt{\textbackslash f1}), at 16 points
 (\texttt{\textbackslash fs32}) and in bold (\texttt{\textbackslash
-  b}). The command \texttt{\textbackslash keepn} keeps the heading
+  b}). The command \texttt{\textbackslash keepn} keeps the headling-like
 paragraph on the same page as the paragraph that follows it.
 \begin{verbatim}
-{\pard \sb120 \sa120 \f1 \fs32 \keepn{\b
+{\pard \sb120 \sa120 \f1 \fs32 \b \keepn
 Introduction
-}\par}
+\par}
 \end{verbatim}
 
 The mark-up is readable but verbose. One simple
-solution is to ``preprocess'' the file using something
-similar in spirit to the following.
+solution is to come up with some macro-like
+substitutions and write a function to
+``preprocess'' the file to do search and replace.
+For example, one could write \texttt{\textbackslash paragraph} in
+documentation chunks and use R to replace this pseudo command with
+valid RTF commands to specify, for example, $120/20=6$ points of space before
+and after the paragraph, and text set in font zero at 12 points.
+
 <<>>=
 preprocess <- function(original.rtf, new.rtf){
   doc <- readLines(original.rtf)
@@ -158,8 +185,10 @@ preprocess <- function(original.rtf, new.rtf){
   writeLines(doc, new.rtf)
 }
 @ 
-With these kind of substitutions, the document can be
-made more readable and much easier to write.
+
+With these kind of substitutions specifying paragraphs, sections,
+subsections, etc, the document can be made more readable and much
+easier to write.
 
 \section{Figures}
 PNG, JPEG, or Windows enhanced metafile (EMF) images can be 
@@ -255,5 +284,8 @@ To include R code in text chunks, use \texttt{\{\textbackslash Sexr <code> \}}.
 \subsection{File naming conventions}
 W
 
-
+\begin{thebibliography}{9}
+  \bibitem{guide}
+    Sean M Burke, \emph{RTF Pocket Guide}. O'Reilly, 2003.
+\end{thebibliography}
 \end{document}
