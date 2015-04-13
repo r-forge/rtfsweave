@@ -1,3 +1,9 @@
+2015-04-13  Stephen Weigand  <Weigand.Stephen@mayo.edu>
+
+	* Fixed but in \SweaveInput which required
+	\SweaveInput{<filename_sans_ext>} rather than
+	{\SweaveInput <filename_sans_ext>}
+
 2015-04-07  Stephen Weigand  <Weigand.Stephen@mayo.edu>
 
 	* 'vignette' changed to 'vignettes' with
