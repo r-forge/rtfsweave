@@ -8,7 +8,7 @@
 
 	* 'vignette' changed to 'vignettes' with
 	   shell> svn move vignette vignettes
-	   but 
+	   but
 	* vignette/rtfSweave-intro.pdf was added.
 
 2015-04-03  Stephen Weigand  <Weigand.Stephen@mayo.edu>
@@ -25,4 +25,3 @@
 	importing these packages in my 'NAMESPACE' file. I may also want to
 	change my NAMESPACE file to use 'importFrom(grDevices, png, jpeg)'.
 	The latter is used when only a few things need to be imported.
-
