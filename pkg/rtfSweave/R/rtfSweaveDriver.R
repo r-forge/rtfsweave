@@ -638,7 +638,7 @@ SweaveSyntaxRtf <-
        docexpr = "\\{\\\\Sexpr ([^\\}]*)\\}", 
        extension = "\\.[rsRS]?rtf$",
        syntaxname = "\\{\\\\SweaveSyntax ([^\\}]*)\\}", 
-       input = "^[[:space:]]*\\\\SweaveInput\\{([^\\}]*)\\}",
+       input = "^[[:space:]]*\\{\\\\SweaveInput ([^\\}]*)\\}",
        trans = 
        list(doc = "^@",                                         
             code = "^<<\\1>>=",
