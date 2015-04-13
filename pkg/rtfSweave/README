@@ -34,3 +34,11 @@ Some notes I am keeping concerning packaging rtfSweave
   [13] "SweaveSyntaxNoweb"         "SweaveSyntConv"           
 
   It does not appear to export 'SweaveParseOptions' which I need.
+
+
+* SweaveInput
+  Note that \SweaveInput <file> does not want quotes around
+  the filename and the file has to be in the current directory
+  or a subdirecty. For example:
+  {\SweaveInput header}
+  {\SweaveInput ./subdir/header}
