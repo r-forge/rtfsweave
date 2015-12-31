@@ -30,7 +30,7 @@
   These functions are components of the rtfSweave driver and currently
   not documented but they are exported. 
 }
-\usage{
+%% \usage{
 %% RtangleWritedoc(object, chunk)
 %% RweaveChunkPrefix(options)
 %% RweaveEvalWithOpt(expr, options)
@@ -39,8 +39,9 @@
 %% RweaveTryStop(err, options)
 %% SweaveHooks(options, run = FALSE, envir = .GlobalEnv)
 %% makeRweaveLatexCodeRunner(evalFunc = RweaveEvalWithOpt)
-}
-\author{Friedrich Leisch, with contributions by Seth Falcon}
+%% }
+\author{Original Sweave versions by Friedrich Leisch, with contributions
+  by Seth Falcon. RTF changes by Stephen Weigand}
 \seealso{The \code{\link{Sweave}}, \code{\link{RweaveLatex}} help pages.
 }
 \keyword{utilities}
