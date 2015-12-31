@@ -60,8 +60,9 @@ RweaveRtfSetup <-
                     png = TRUE, jpeg = FALSE, wmf = FALSE, hex = TRUE,
                     grdevice = "", width = 6, height = 6, resolution = 300,
                     pointsize = 12,
-                    rtf.Sinput  = "\\b0 \\ql \\sb120 \\sa120 \\f2 \\fs20 \\i",
-                    rtf.Soutput = "\\b0 \\ql \\sb120 \\sa120 \\f2 \\fs20",
+                    rtf.Schunk  = "\\ql \\sb120 \\sa120",
+                    rtf.Sinput  = "\\b0 \\f2 \\fs20 \\i",
+                    rtf.Soutput = "\\b0 \\f2 \\fs20",
                     term = TRUE, echo = TRUE, keep.source = TRUE,
                     results = "verbatim",
                     split = FALSE, strip.white = "true", include = TRUE,
@@ -185,16 +186,14 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
             if (!openSinput) {
                 if (!openSchunk) {
                     ## cat("\\begin{Schunk}\n", file = chunkout)
-                    ## We don't have a Schunk "environ," just input and output
-                    ## first input
-                    cat("{\\pard ", options$rtf.Sinput, "\n", file = chunkout)
+                    cat("{\\pard", options$rtf.Schunk, "\n", file = chunkout)
                     linesout[thisline + 1L] <<- srcline
                     filenumout[thisline + 1L] <<- srcfilenum
                     thisline <<- thisline + 1L
                     openSchunk <<- TRUE
                 }
                 ## cat("\\begin{Sinput}", file = chunkout)
-                ## cat("{\\i", file = chunkout) # Don't need anymore since rtf.Sinput has italics (usually)
+                cat("{", options$rtf.Sinput, "\n", sep = "", file = chunkout)
                 openSinput <<- TRUE
             }
             leading <- max(leading, 1L) # safety check
@@ -313,7 +312,7 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
             if (length(output) && (options$results != "hide")) {
                 if (openSinput) {
                     ## cat("\n\\end{Sinput}\n", file = chunkout)
-                    cat("\n\\par}\n", file = chunkout) # end input paragraph
+                    cat("\n}\n", file = chunkout) # end input paragraph
                     linesout[thisline + 1L:2L] <- srcline
                     filenumout[thisline + 1L:2L] <- srcfilenum
                     thisline <- thisline + 2L
@@ -322,7 +321,7 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
                 if (options$results == "verbatim") {
                     if (!openSchunk) {
                         ## cat("\\begin{Schunk}\n", file = chunkout)
-                        cat("{\\pard ", options$rtf.Soutput, "\n", file = chunkout)
+                        cat("{\\pard", options$rtf.Schunk, "\n", file = chunkout)
                         linesout[thisline + 1L] <- srcline
                         filenumout[thisline + 1L] <- srcfilenum
                         thisline <- thisline + 1L
@@ -330,7 +329,7 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
                     }
                     ## No '\\line' here.
                     ## cat("\\begin{Soutput}\n", file = chunkout)
-                    cat("\n", file = chunkout)
+                    cat("{", options$rtf.Soutput, "\n", sep = "", file = chunkout)
                     linesout[thisline + 1L] <- srcline
                     filenumout[thisline + 1L] <- srcfilenum
                     thisline <- thisline + 1L
@@ -356,7 +355,7 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
 
                 if (options$results == "verbatim") {
                     ## cat("\n\\end{Soutput}\n", file = chunkout)
-                    cat("\n", file = chunkout)
+                    cat("\n}\n", file = chunkout)
                     linesout[thisline + 1L:2L] <- srcline
                     filenumout[thisline + 1L:2L] <- srcfilenum
                     thisline <- thisline + 2L
@@ -368,7 +367,7 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
         if (options$keep.source) echoComments(length(srcfile$lines))
 
         if (openSinput) {
-            cat("\n\\par}\n", file = chunkout) # end italic
+            cat("\n}\n", file = chunkout) # end italic
             linesout[thisline + 1L:2L] <- srcline
             filenumout[thisline + 1L:2L] <- srcfilenum
             thisline <- thisline + 2L
