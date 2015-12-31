@@ -1,3 +1,11 @@
+2015-12-31  Stephen Weigand  <Weigand.Stephen@mayo.edu>
+
+	* R/rtfSweaveDriver.R (RweaveRtfSetup): Added options named
+	'rtf.Sinput' and 'rtf.Soutput' which are strings of paragraph
+	formatting commands for the R code and the R output.
+	(makeRweaveRtfCodeRunner): now pulling 'options$rtf.Sinput'
+
+
 2015-04-13  Stephen Weigand  <Weigand.Stephen@mayo.edu>
 
 	* Fixed but in \SweaveInput which required
