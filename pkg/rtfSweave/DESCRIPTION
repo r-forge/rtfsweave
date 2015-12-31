@@ -1,7 +1,7 @@
 Package: rtfSweave
 Type: Package
 Title: An Sweave Driver to Process Files with R Code and RTF Text
-Version: 0.2-0
+Version: 0.3-0
 Date: 2015-04-03 
 Authors@R: c(person(given = "R Core Team", role = c("aut", "cph")),
              person(given = c("Stephen", "D"), family = "Weigand", role = c("aut", "cre"),
