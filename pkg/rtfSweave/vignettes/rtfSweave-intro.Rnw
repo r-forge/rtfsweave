@@ -22,28 +22,29 @@
 \section{Overview}
 
 In this document I try to provide some very basic information about
-RTF and show how to use the \pkg{rtfSweave} package with
-\code{Sweave} to make RTF statistical reports.  For me, the key to understanding
-RTF was reading the excellent \emph{RTF Pocket Guide} by Sean
-Burke\cite{guide}.  It covers important aspects of RTF and only after reading it did I
-find that the RTF specifications published
-by Microsoft made some sense. The \emph{Pocket Guide} can be downloaded as a PDF from
-the publisher's website (currently
-\url{http://shop.oreilly.com/product/9780596004750.do}). 
+RTF and show how to use the \pkg{rtfSweave} package with \code{Sweave}
+to make RTF statistical reports.  For me, the key to understanding RTF
+was reading the excellent \emph{RTF Pocket Guide} by Sean
+Burke\cite{guide}.  It covers important aspects of RTF and only after
+reading it did I find that the RTF specifications published by
+Microsoft made some sense. The \emph{Pocket Guide} can be purchased
+and downloaded as a PDF from the publisher's website (currently
+\url{http://shop.oreilly.com/product/9780596004750.do}).
 
 Rich Text Format (RTF) is a mark-up language in that RTF files are
-plain text files containing document ``content'' such as text, tables,
+plain text files containing document content such as text, tables,
 and figures along with commands indicating how these should be
 displayed. %\footnote{Bitmap
 %  figures are incorporated into the RTF file itself by converting them from their
-%  binary representation to a hexadecimal character representation.} 
+% binary representation to a hexadecimal character representation.}
 In this sense, RTF is somewhat similar to HTML or \LaTeX. RTF was
-developed by Microsoft and is tightly integrated into Microsoft
-Word (MS Word), so much so that RTF is essentially a text-based interface to Word
-documents. If you are creating a statistical report for an MS Word user, 
-there may be an advantage to writing the RTF directly rather than having to 
-use a converter from \LaTeX or other format. This should not be taken as
-arguing that RTF is a replacement for \LaTeX.
+developed by Microsoft and is tightly integrated into Microsoft Word
+(MS Word), so much so that RTF is essentially a text-based interface
+to Word documents. If you are creating a statistical report for an MS
+Word user, there may be an advantage to writing the RTF directly
+rather than using a document conversion program.
+Still, this should not be taken as arguing that RTF is a replacement
+for \LaTeX. 
 %While other
 %\textsf{R} packages facilitate writing HTML or \LaTeX, the results
 %must then be converted if the reader expects or requires a document in MS
@@ -51,9 +52,10 @@ arguing that RTF is a replacement for \LaTeX.
 
 One important way that RTF differs in spirit from HTML or \LaTeX\ is
 that in the RTF specification there is much less separation between
-content and presentation.%\footnote{RTF does have so-called sytles but
+content and presentation.
+%\footnote{RTF does have so-called sytles but
 %  they are...} 
-For example, headings in an RTF document are really just
+ For example, headings in an RTF document are really just
 short paragraphs with special formatting and not structural elements.
 %In this way, RTF behaves like a page markup language
 
