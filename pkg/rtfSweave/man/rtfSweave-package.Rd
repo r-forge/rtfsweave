@@ -30,6 +30,7 @@
 }
 
 \author{Stephen Weigand \email{Weigand.Stephen@mayo.edu}}
+\keyword{package}
 \keyword{utilities}% at least one, from doc/KEYWORDS
 
   
