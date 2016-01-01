@@ -4,10 +4,10 @@ Title: An Sweave Driver to Process Files with R Code and RTF Text
 Version: 0.3-0
 Date: 2015-04-03 
 Authors@R: c(person(given = "R Core Team", role = c("aut", "cph")),
-             person(given = c("Stephen", "D"), family = "Weigand", role = c("aut", "cre"),
+             person(given = "Stephen", family = "Weigand", role = c("aut", "cre"),
                     email = "Weigand.Stephen@mayo.edu"))
 Maintainer: Stephen Weigand <Weigand.Stephen@mayo.edu>
-Description: This package provides an Sweave driver that allows
+Description: An Sweave driver that allows
  the user to use Sweave to create documents having R code chunks and rich
  text format (RTF) documentation chunks. 
  After Sweave()ing the file
