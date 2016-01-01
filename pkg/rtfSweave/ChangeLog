@@ -1,3 +1,12 @@
+2016-01-01  Stephen Weigand  <Weigand.Stephen@mayo.edu>
+
+	* R/rtfSweaveDriver.R (RweaveRtfSetup): Added option named
+	'rtf.Schunk' which is a string to format the paragraph of an
+	Schunk. The options 'rtf.Sinput' and 'rtf.Soutput' are now strings
+	of text (not paragraph) formatting commands for the R code and the
+	R output.
+	(makeRweaveRtfCodeRunner): now pulling 'options$rtf.Schunk'
+
 2015-12-31  Stephen Weigand  <Weigand.Stephen@mayo.edu>
 
 	* R/rtfSweaveDriver.R (RweaveRtfSetup): Added options named
