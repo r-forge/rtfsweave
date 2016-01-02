@@ -47,6 +47,37 @@ SweaveSyntaxRtf
   
 }
 
+\section{Important options for \pkg{rtfSweave}}{
+\describe{
+  \item{\code{png}}{The default for figures.}
+  \item{\code{jpeg}}{JPEG figures are supported.}
+  \item{\code{wmf}}{WMF figures are supported. This will work only on Windows as it relies on
+    \code{win.metafile}. There is no checking whether the platform is
+    actually Windows but there should be.}
+  \item{\code{hex}}{This controls whether the figure is embedded into
+    the RTF document as hexadecimal characters. The default is
+    \code{TRUE}. If \code{FALSE} then the output file \dQuote{includes}
+    the file with an \dQuote{INCLUDEPICTURE} RTF field instruction. This
+    produces small files since the figures are not embedded but it
+    takes some Word commands to convert the \dQuote{included} picture
+    into an embedded image.}
+  \item{\code{resolution}}{While not specific to \pkg{rtfSweave} this
+    options is used enough often. It controls the figure resolution and
+    defaults to 300 dpi.}
+  \item{\code{pointsize}}{Controls pointsize for the figures.}
+  \item{\code{rtf.Schunk}}{RTF \emph{paragraph} formatting commands for the R input and
+    output. The default is Sweave like. Since the R input and output are
+    part of the same paragraph (with lines broken by \verb{\line}), this
+    options controls formatting for both input and output.}
+  \item{\code{rtf.Sinput}}{RTF \emph{text} formatting commands for R
+    input.}
+  \item{\code{rtf.Soutput}}{RTF \emph{text} formatting commands for R output.}
+  \item{\code{results}}{Set this to \code{"rtf"} if the Soutput is
+    \dQuote{native} RTF code.}
+  }
+}
+
+
 \note{ This driver is unlikely to work with documents written directly
   in Microsoft Word and saved as RTF prior to processing with
   \code{Sweave}. %%The problem is that code chunks
