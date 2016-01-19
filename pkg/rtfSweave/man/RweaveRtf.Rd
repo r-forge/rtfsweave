@@ -3,6 +3,7 @@
 %% \alias{rtfSweave-package} Now I have my own rtfSweave-package.Rd file
 \alias{rtfSweave}
 \alias{SweaveSyntaxRtf}
+\alias{RtangleRtf}
 %\alias{rtfSweaveDriver}
 %\alias{rtfTangleDriver}
 
@@ -13,6 +14,7 @@
 }
 \usage{
 RweaveRtf()
+RtangleRtf()
 SweaveSyntaxRtf
 %rtfSweaveDriver()
 %rtfTangleDriver()
@@ -21,7 +23,7 @@ SweaveSyntaxRtf
 \details{
 
   The \code{Sweave} function uses by default the \code{RweaveLatex}
-  driver to process LaTeX documents. Yet \code{Sweave} was designed to
+  driver to process LaTeX documents. However, \code{Sweave} was designed to
   allow authors to write their own drivers. The \code{rtfSweave} driver
   documented here is essentially a copy of the \code{RweaveLatex} driver
   with some necessary changes to make it work for rich text format (RTF)
@@ -77,6 +79,16 @@ SweaveSyntaxRtf
   }
 }
 
+\section{Weaving versus tangling and naming conventions}{ Documents written with RTF
+    documentation chunks can be \dQuote{weaved} to form an RTF report or
+    \dQuote{tangled} to extract the code chunks.  A separate driver is
+    needed for these two tasks as 
+    demonstrated in the examples.
+
+    Since Sweave provides \code{Rweave()} and \code{Rtangle()}, the 
+    respective
+    drivers for RTF are named \code{RweaveRtf()} and \code{RtangleRtf}.
+  }
 
 \note{ This driver is unlikely to work with documents written directly
   in Microsoft Word and saved as RTF prior to processing with
@@ -107,10 +119,19 @@ SweaveSyntaxRtf
 testfilepath <- system.file("examples", "rtfSweave-test-1.rtf",
                             package = "rtfSweave")
 
+## 'weave' to create the document
+##
 ## 'syntax' argument can be unspecified since per its help
 ## Sweave can find syntax objects matching pattern 'SweaveSyntax.*'
 Sweave(testfilepath, driver = RweaveRtf, syntax = SweaveSyntaxRtf,
        output = tempfile(fileext = ".rtf"))
+
+
+## 'tangle' to extract R code chunks.
+Sweave(testfilepath, driver = RtangleRtf(), syntax = SweaveSyntaxRtf,
+       output = tempfile(fileext = ".R"))
+
+       
 }
 
 \keyword{utilities}% at least one, from doc/KEYWORDS
