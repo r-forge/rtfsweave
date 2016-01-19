@@ -659,3 +659,13 @@ SweaveSyntaxRtf <-
             input = "{\\\\SweaveInput \\1}"))
 
 class(SweaveSyntaxRtf) <- "SweaveSyntax"
+
+## Jan. 19, 2016. Didn't know I needed a separate tangle driver
+## A few things I need from utils are not exported.
+RtangleRtf <- function(){
+    list(setup = RtangleSetup,
+         runcode = utils:::RtangleRuncode,
+         writedoc = RtangleWritedoc,
+         finish = utils:::RtangleFinish,
+         checkopts = RweaveRtfOptions)    
+}
