@@ -106,13 +106,11 @@ SweaveSyntaxRtf
 \examples{
 testfilepath <- system.file("examples", "rtfSweave-test-1.rtf",
                             package = "rtfSweave")
-tempfilepath <- paste(tempfile(), ".rtf", sep = "")
 
 ## 'syntax' argument can be unspecified since per its help
 ## Sweave can find syntax objects matching pattern 'SweaveSyntax.*'
 Sweave(testfilepath, driver = RweaveRtf, syntax = SweaveSyntaxRtf,
-       output = tempfilepath)
-       
+       output = tempfile(fileext = ".rtf"))
 }
 
 \keyword{utilities}% at least one, from doc/KEYWORDS
