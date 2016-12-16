@@ -18,7 +18,7 @@
 
 \begin{document}
 \maketitle
-\tableofcontents
+%% \tableofcontents
 \section{Overview}
 
 In this document I try to provide some very basic information about
@@ -80,8 +80,9 @@ that RTF has no built-in comments so I am using ``\texttt{//}'' to indicate
 \plain \fs24           // Plain format has fontsize 24/2 = 12 points
 
 {\fonttbl              // Font table
-{\f0 Times New Roman;} // Font 0 defined as Times New Roman
-{\f1 Arial;}           // Font 1 defined as Arial
+{\f0 Times New Roman;} // Font 0 is Times New Roman (roman)
+{\f1 Arial;}           // Font 1 is Arial (sans)
+{\f2 Courier New;}     // Font 2 is Courier New (monospace)
 }
 
 {\pard \fs28 \b        // Paragraph set at 28/2 = 14 pts in bold
@@ -91,32 +92,43 @@ Greeting               //   to resemble a level-1 heading
 {\pard                 // New paragraph set with "plain" formatting
 Hello, World!
 \par}                  // End paragraph
-}
+}                      // End of the RTF document
 \end{verbatim}
 \end{minipage}
 \caption{An annotated RTF version of ``Hello, World!''}
 \end{figure}
 
+Blank lines are ignored in RTF but spaces in the RTF document will show
+up in the rendered document.
+
 \section{Document prolog}
 
 The \emph{Guide} has information on the prolog. In it you define some
 document defaults, a font table, a color table (optional), and an info
-group containing metadata (optional).
+group containing metadata (optional). The font table is important
+for \pkg{rtfSweave} because by default code chunks use 
+\texttt{\textbackslash f2} and so this would typically be a monospaced
+font. The markup for code chunks can be controlled with
+the \texttt{rtf.Schunk} option. 
+
 
 \section{Paragraphs}
 
 RTF has a paragraph entity, but no heading entities. This means that
 headings are just paragraphs with special formatting such as boldface
 type. Following the {\emph Pocket Guide}\cite{guide},
-paragraphs are written using the following form.\footnote{Note that there are
- no spaces at the end of these lines. If there were they would
- show up as extraneous spaces in the document. Blank lines don't matter in RTF but spaces do.}
+paragraphs are written using the following form.
+%% \footnote{Note that there are
+%%  no spaces at the end of these lines. If there were they would
+%%  show up as extraneous spaces in the document. Blank lines don't matter in RTF but spaces do.}
 
+\begin{minipage}{0.9\textwidth}
 \begin{verbatim}
 {\pard
 A short paragraph.
 \par}
 \end{verbatim}
+\end{minipage}
 
 Formatting instructions for the paragraph can follow the
 \texttt{\textbackslash pard} command on the same line.  For many
@@ -128,7 +140,7 @@ inch.\footnote{My guess is that twips were used to allow RTF commands
 are specified in half points.  To illustrate, the following paragraph
 has 120 twips (six points) of space before and after the paragraph and
 is set in font zero at 24 half points (12 points). A single space after the RTF commands
-is optional but helps readability.
+is optional (and will not show up in the document) but helps readability.
 %%\footnote{A twip is a standard unit of measurement
 %% in RTF and equals one twentieth of a point. If there are 72 points to an inch, there are
 %% $72 \times 20 = 1440$ twips per) of space before the
@@ -163,21 +175,26 @@ instructions. The following creates the appearance of a heading by being display
 font 1 (\texttt{\textbackslash f1}), at 16 points
 (\texttt{\textbackslash fs32}) and in bold (\texttt{\textbackslash
   b}). The command \texttt{\textbackslash keepn} keeps the headling-like
-paragraph on the same page as the paragraph that follows it.
+paragraph on the same page as the paragraph that follows it. The
+commaand \texttt{\textbackslash outlinelevel1} is one of the few structural
+mark-up commands in RTF and facilitates document navigation.\footnote{MS Word has
+  a ``navigation pane'' and paragraphs with \texttt{\textbackslash outlinelevel\emph{N}}
+  show up in this pane.}xxxx
 \begin{verbatim}
-{\pard \sb120 \sa120 \f1 \fs32 \b \keepn
+{\pard \sb120 \sa120 \f1 \fs32 \b \keepn \outlinelevel1
 Introduction
 \par}
 \end{verbatim}
 
 The mark-up is readable but verbose. One simple
 solution is to come up with some macro-like
-substitutions and write a function to
-``preprocess'' the file to do search and replace.
+substitutions and write an \textsf{R} function to
+``preprocess'' the using text substitutions.
 For example, one could write \texttt{\textbackslash paragraph} in
-documentation chunks and use R to replace this pseudo command with
+documentation chunks and use \textsf{R} to replace this pseudo command with
 valid RTF commands to specify, for example, $120/20=6$ points of space before
-and after the paragraph, and text set in font zero at 12 points.
+and after the paragraph, and text set in font zero at 12 points. Here is a 
+simple example.
 
 <<>>=
 preprocess <- function(original.rtf, new.rtf){
@@ -192,17 +209,31 @@ preprocess <- function(original.rtf, new.rtf){
 
 With these kind of substitutions specifying paragraphs, sections,
 subsections, etc, the document can be made more readable and much
-easier to write.
+easier to write. 
+
+There is a ``short cut'' form to a paragraph which is just text ending
+in a backslash. Here is an example which is analogous to 
+typing a paragraph in MS Word, hitting the return key twice, and
+typing another paragraph.
+
+\begin{verbatim}
+A first
+ paragraph.\
+\
+A second paragraph.\
+\end{verbatim}
 
 \section{Figures}
-PNG, JPEG, or Windows enhanced metafile (EMF) images can be 
+PNG, \scshape{JPEG}, or Windows enhanced metafile (EMF) images can be 
 included in an RTF document by converting the image file to
 text using a hexdump and wrapping it in some RTF control commands. 
 (See \url{http://en.wikipedia.org/wiki/Hex_dump} 
 for details on a hexdump.)
 
 Here is a partial example of RTF that would display a PNG
-file in a paragrap by itself.
+file in a paragraph by itself. The key commands
+are texttt{\textbackslash pict} and
+texttt{\textbackslash pngblip}. 
 
 \begin{verbatim}
 {\pard{\pict\pngblip
@@ -227,6 +258,16 @@ hex <- readBin(tmp, what = "raw", size)
 cat(hex, fill = 60, sep = " ")
 @ 
 
+The good news is that \pkg{rtfSweave} handles this. Like in
+Sweave, code chunks just need \texttt{fig = TRUE} (or
+\texttt{fig = true}. There is also an option invoked
+with \texttt{hex = FALSE} which will skip the hex dump and
+instead use an
+\texttt{INCLUDEPICTURE} RTF field instruction which
+is an analog to a \LaTeX \texttt{\textbackslash includegraphics}
+command. This makes for a smaller document but special steps
+need to be taken to embed the figures in the document.
+
 \section{Tables}
 
 Tables in RTF are defined by a sequence of independent
@@ -234,7 +275,7 @@ Tables in RTF are defined by a sequence of independent
 the \texttt{\{\textbackslash trowd} $\dots$ \texttt{\textbackslash row\}}
 construct. Each row consists of some number of ``cells.''
 Here is a simple two-row table where each row has
-three cells (which are displayed as columns).
+three cells.
 
 \begin{verbatim}
 {\trowd 
@@ -263,12 +304,14 @@ the third cell's right margin is at 4320 twips (3 inches).
 
 At present, the \pkg{rtfSweave} simply provides a driver so
 that \code{Sweave} can process an RTF file. Assuming that
-the file with text and code is \texttt{myreport.Rnw},
+the file with text and code is \texttt{myreport.Rrtf},
 the commands to process the file are
 \begin{verbatim}
-require("rtfSweave")
-Sweave("myreport.Rnw", driver = RweaveRtf(),
-       syntax = SweaveSyntaxRtf)
+library("rtfSweave")
+Sweave("myreport.Rrtf", 
+       driver = RweaveRtf(),    ## Important
+       syntax = SweaveSyntaxRtf,
+       png = FALSE, wmf = TRUE) ## options
 \end{verbatim}
 Actually, the \code{syntax} argument is not necessary because 
 \code{Sweave} is smart enough to find the right syntax object,
@@ -281,12 +324,21 @@ object and therefore, code chunks are defined by
 \emph{Your code here}
 \phantom{}@ 
 \end{alltt}
-To include R code in text chunks, use \texttt{\{\textbackslash Sexr <code> \}}.
+To include \textsf{R} code in text chunks, use \texttt{\{\textbackslash Sexpr <your code>\}}.
 
+As with Sweave, options can be set within the document. An example
+is below.
 
+\begin{verbatim}
+{\SweaveOpts echo = false, resolution = 100}
+\end{verbatim}
 
-\subsection{File naming conventions}
-W
+Three options apparently cannot be set this way: 
+\texttt{rtf.Schunk}, \texttt{rtf.Sinput}, and \texttt{rtf.Soutput}.
+These options take a string of RTF commands and the backslashes
+cause problems. It seems that these options have to be
+passed as arguments to \texttt{Sweave} which means they
+can't be changed within the document.
 
 \begin{thebibliography}{9}
   \bibitem{guide}
