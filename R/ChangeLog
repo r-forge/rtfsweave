@@ -1,3 +1,9 @@
+2016-12-22  Stephen Weigand  <Weigand.Stephen@mayo.edu>
+
+	* Sweave.r71838.R and SweaveDrivers.r71838 came from
+	shell> svn export -r71838 https://svn.r-project.org/R/trunk/src/library/utils/R/Sweave<Drivers>.R
+	Note it's 'https' now.
+
 2015-04-03  Stephen Weigand  <Weigand.Stephen@mayo.edu>
 	* Sweave.R in the current directory was renamed via:
 	shell> svn mv Sweave.R SweaveDrivers.r65759.R
