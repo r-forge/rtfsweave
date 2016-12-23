@@ -27,7 +27,7 @@ render_rtf()
   Stephen Weigand \email{Weigand.Stephen@mayo.edu}
   adopting code originally from Yihui Xie.
 }
-\warning{
+\note{
   This function is in very early stages of development and I do not
   know what I am doing.
 }
@@ -41,8 +41,8 @@ render_rtf()
 ## Put this in an early chunk in your .Rrtf document
 ## When you call 'knit' you need to specify 'output' otherwise
 ## the output is 'foo.txt' rather than 'foo.rtf'
-render_rtf()
-}
+\donttest{render_rtf()} %% <- I don't want users to have to have knitr
+}                       %%    and may not have NAMESPACE or DESCRIPTION right
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{utilities}
