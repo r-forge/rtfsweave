@@ -1,3 +1,8 @@
+2016-12-23  Stephen Weigand  <Weigand.Stephen@mayo.edu>
+
+	* R/render_rtf.R Added to provide RTF-based hoooks for knitr
+	* man/render_rtf.Rd Documented 'render_rtf()'
+
 2016-01-01  Stephen Weigand  <Weigand.Stephen@mayo.edu>
 
 	* R/rtfSweaveDriver.R (RweaveRtfSetup): Added option named
