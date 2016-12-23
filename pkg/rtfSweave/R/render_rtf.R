@@ -69,21 +69,21 @@
 ## Patterns
 ## ========
 
-knit_patterns$restore() ## ?knit_patterns
-
-rtf_patterns <-
-  list(chunk.begin = "^\\s*<<(.*)>>=.*$",
-       chunk.end = "^\\s*@\\s*(%+.*|)$",
-       inline.code = "\\{\\\\Sexpr([^}]+)\\}", # "\\\\Sexpr\\{([^}]+)\\}",
-       inline.comment = "^\\s*%.*", 
-       ref.chunk = "^\\s*<<(.+)>>\\s*$")
-       ## Not ever pattern has these two so I omit them:
-       ## header.begin = "(^|\n)[^%]*\\s*\\\\documentclass[^}]+\\}"
-       ## document.begin = \\s*\\\\begin\\{document\\}"
-
-
-pat_rnw()
-knit_patterns$set(rtf_patterns)
+## knit_patterns$restore() ## ?knit_patterns
+## 
+## rtf_patterns <-
+##   list(chunk.begin = "^\\s*<<(.*)>>=.*$",
+##        chunk.end = "^\\s*@\\s*(%+.*|)$",
+##        inline.code = "\\{\\\\Sexpr([^}]+)\\}", # "\\\\Sexpr\\{([^}]+)\\}",
+##        inline.comment = "^\\s*%.*", 
+##        ref.chunk = "^\\s*<<(.+)>>\\s*$")
+##        ## Not ever pattern has these two so I omit them:
+##        ## header.begin = "(^|\n)[^%]*\\s*\\\\documentclass[^}]+\\}"
+##        ## document.begin = \\s*\\\\begin\\{document\\}"
+## 
+## 
+## pat_rnw()
+## knit_patterns$set(rtf_patterns)
 
 ## Hooks (n=10)
 ## ============
@@ -152,18 +152,20 @@ rtf.hook.document <- rtf.hook.text
 
 ## `render_rtf` puts it all together
 ## =================================
+##
+## Note: We use `::` since knitr is only a 'Suggests' package
 
 render_rtf <- function () {
   ## Most formats don't set in thei `render_x` function
   ## knit_patterns$set(rtf_patterns)
 
-  opts_chunk$set(highlight = FALSE, comment = "##", prompt = FALSE)
-  opts_knit$set(out.format = "sweave")
+  knitr::opts_chunk$set(highlight = FALSE, comment = "##", prompt = FALSE)
+  knitr::opts_knit$set(out.format = "sweave")
   
   ## This is text to add to document. The argment name doesn't
   ## mean anything.
   ## set_header(framed = "", highlight = "\\usepackage{Sweave}")
-  set_header(framed = "",
+  knitr::set_header(framed = "",
              highlight =
              ## could grab font list from rtf.options
              paste("{\\fonttbl",
@@ -173,13 +175,13 @@ render_rtf <- function () {
                    "}",
                    collapse = "\n"))
                    
-  knit_hooks$set(source = rtf.hook.source,
-                 output = rtf.hook.output,
-                 warning = rtf.hook.warning,
-                 message = rtf.hook.message,
-                 error = rtf.hook.error,
-                 plot = rtf.hook.plot,
-                 inline = rtf.hook.inline,
-                 chunk = rtf.hook.chunk,
-                 document = rtf.hook.document)
+  knitr::knit_hooks$set(source = rtf.hook.source,
+                        output = rtf.hook.output,
+                        warning = rtf.hook.warning,
+                        message = rtf.hook.message,
+                        error = rtf.hook.error,
+                        plot = rtf.hook.plot,
+                        inline = rtf.hook.inline,
+                        chunk = rtf.hook.chunk,
+                        document = rtf.hook.document)
 }
