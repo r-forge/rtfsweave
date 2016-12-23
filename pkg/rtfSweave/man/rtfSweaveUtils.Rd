@@ -41,8 +41,8 @@
 %% makeRweaveLatexCodeRunner(evalFunc = RweaveEvalWithOpt)
 %% }
 \author{Original Sweave versions by Friedrich Leisch, with contributions
-  by Seth Falcon. RTF changes by Stephen Weigand}
+  by Seth Falcon. RTF changes by Stephen Weigand \email{Weigand.Stephen@mayo.edu}}
 \seealso{The \code{\link{Sweave}}, \code{\link{RweaveLatex}} help pages.
 }
 \keyword{utilities}
-\keyword{internal}
+
