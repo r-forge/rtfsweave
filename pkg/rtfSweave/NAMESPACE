@@ -1,2 +1,3 @@
-export(RweaveRtf, SweaveSyntaxRtf, RtangleRtf, render_rtf)
+export(RweaveRtf, SweaveSyntaxRtf, RtangleRtf, render_rtf,
+       rtf.options, rtf.getOption)
 import(utils, grDevices)
