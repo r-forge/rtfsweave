@@ -1,0 +1,7 @@
+2017-03-28  Stephen Weigand  <Weigand.Stephen@mayo.edu>
+
+	* R/sessionInfo.R Function is usable. I use \\f2 for locale and
+	\\i for packages. Typographically `sessionInfo` is really tabular
+	information.
+
+
