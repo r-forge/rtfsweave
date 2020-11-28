@@ -1,7 +1,7 @@
 ###############################################################
 ##  RTF "port" of src/library/utils/R/SweaveDrivers.R        ##
 ##  which is part of the R package, http://www.R-project.org ##
-##  Written by Stephen Weiand <Weigand.Stephen@mayo.edu>     ##
+##  Written by Stephen Weigand <Weigand.Stephen@mayo.edu>    ##
 ###############################################################
 ##  
 ##  Copyright (C) 1995-2014 The R Core Team
@@ -664,8 +664,8 @@ class(SweaveSyntaxRtf) <- "SweaveSyntax"
 ## A few things I need from utils are not exported.
 RtangleRtf <- function(){
     list(setup = RtangleSetup,
-         runcode = utils:::RtangleRuncode,
+         runcode = RtangleRuncode,
          writedoc = RtangleWritedoc,
-         finish = utils:::RtangleFinish,
+         finish = RtangleFinish,
          checkopts = RweaveRtfOptions)    
 }
