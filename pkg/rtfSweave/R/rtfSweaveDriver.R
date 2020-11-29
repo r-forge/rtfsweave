@@ -664,8 +664,8 @@ class(SweaveSyntaxRtf) <- "SweaveSyntax"
 ## A few things I need from utils are not exported.
 RtangleRtf <- function(){
     list(setup = RtangleSetup,
-         runcode = RtangleRuncode,
+         runcode = utils:::RtangleRuncode,
          writedoc = RtangleWritedoc,
-         finish = RtangleFinish,
+         finish = utils:::RtangleFinish,
          checkopts = RweaveRtfOptions)    
 }
