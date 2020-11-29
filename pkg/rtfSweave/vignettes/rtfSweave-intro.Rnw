@@ -11,8 +11,8 @@
 \newcommand{\pkg}[1]{\texttt{#1}}
 \newcommand{\var}[1]{\emph{#1}}
 
-\title{An introduction to RTF and the \pkg{rtfSweave} package}
-\author{Stephen Weigand \texttt{weigand@mayo.edu}}
+\title{An introduction to Rich Text Format (RTF) and the \pkg{rtfSweave} package}
+\author{Stephen Weigand \texttt{Weigand.Stephen@mayo.edu}}
 
 %\VignetteIndexEntry{Introduction to rtfSweave}
 
@@ -22,13 +22,14 @@
 \section{Overview}
 
 In this document I try to provide some very basic information about
-RTF and show how to use the \pkg{rtfSweave} package with \code{Sweave}
-to make RTF statistical reports.  For me, the key to understanding RTF
-was reading the excellent \emph{RTF Pocket Guide} by Sean
-Burke\cite{guide}.  It covers important aspects of RTF and only after
-reading it did I find that the RTF specifications published by
-Microsoft made some sense. The \emph{Pocket Guide} can be purchased
-and downloaded as a PDF from the publisher's website (currently
+Rich Text Format (RTF) as a mark-up language and show how to use the
+\pkg{rtfSweave} package with \code{Sweave} to make RTF statistical
+reports.  For me, the key to understanding RTF was reading the
+\emph{RTF Pocket Guide} by Sean Burke\cite{guide}.  It
+covers important aspects of RTF and only after reading it did I find
+that the RTF specifications published by Microsoft made some
+sense. The \emph{Pocket Guide} can be purchased and downloaded as a
+PDF from the publisher's website (currently
 \url{http://shop.oreilly.com/product/9780596004750.do}).
 
 Rich Text Format (RTF) is a mark-up language in that RTF files are
@@ -55,8 +56,9 @@ that in the RTF specification there is much less separation between
 content and presentation.
 %\footnote{RTF does have so-called sytles but
 %  they are...} 
- For example, headings in an RTF document are really just
-short paragraphs with special formatting and not structural elements.
+For example, headings in an RTF document are really just
+short paragraphs with special formatting to make them display like a heading.
+That is, headings are not not structurally different from any other paragraph.
 %In this way, RTF behaves like a page markup language
 
 %% The \emph{RTF Pocket Guide} is an excellent basic introduction to
@@ -103,21 +105,22 @@ up in the rendered document.
 
 \section{Document prolog}
 
-The \emph{Guide} has information on the prolog. In it you define some
-document defaults, a font table, a color table (optional), and an info
-group containing metadata (optional). The font table is important
-for \pkg{rtfSweave} because by default code chunks use 
+The \emph{Pocket Guide} has detailed information on the prolog. In it you
+define some document defaults, a font table, a color table (optional),
+and an info group containing metadata (optional). The font table is
+important for \pkg{rtfSweave} because by default code chunks use
 \texttt{\textbackslash f2} and so this would typically be a monospaced
-font. The markup for code chunks can be controlled with
-the \texttt{rtf.Schunk} option. 
+font.
+%% The markup for code chunks can be controlled with the
+%% \texttt{rtf.Schunk} option.
 
 
-\section{Paragraphs}
+\section{Paragraphs and paragraphs formatted to look like headings}
 
-RTF has a paragraph entity, but no heading entities. This means that
-headings are just paragraphs with special formatting such as boldface
-type. Following the {\emph Pocket Guide}\cite{guide},
-paragraphs are written using the following form.
+As I mentioned above, RTF has a paragraph entity, but no heading
+entities. This means that headings are just paragraphs with special
+formatting such as boldface type. Following the {\emph Pocket
+  Guide}\cite{guide}, paragraphs are written using the following form.
 %% \footnote{Note that there are
 %%  no spaces at the end of these lines. If there were they would
 %%  show up as extraneous spaces in the document. Blank lines don't matter in RTF but spaces do.}
@@ -138,9 +141,10 @@ points/inch, then there are $72 \times 20 = 1440$ twips per
 inch.\footnote{My guess is that twips were used to allow RTF commands
   to be specified in integer units.}) One exception is that text sizes
 are specified in half points.  To illustrate, the following paragraph
-has 120 twips (six points) of space before and after the paragraph and
-is set in font zero at 24 half points (12 points). A single space after the RTF commands
-is optional (and will not show up in the document) but helps readability.
+has 120 twips (or $120/20=6$ points) of space before and after the
+paragraph and is set in font zero at 24 half-points (12 points). A
+single space after the RTF commands is optional (and will not show up
+in the document) but helps readability.
 %%\footnote{A twip is a standard unit of measurement
 %% in RTF and equals one twentieth of a point. If there are 72 points to an inch, there are
 %% $72 \times 20 = 1440$ twips per) of space before the
@@ -152,7 +156,7 @@ is optional (and will not show up in the document) but helps readability.
 \begin{minipage}{0.9\textwidth}
 \begin{verbatim}
 {\pard \sb120 \sa120 \f0 \fs24
-A short paragraph.
+A short paragraph set in font zero at 12 points with 6 points spacing before and after.
 \par}
 \end{verbatim}
 \end{minipage}
@@ -176,25 +180,38 @@ font 1 (\texttt{\textbackslash f1}), at 16 points
 (\texttt{\textbackslash fs32}) and in bold (\texttt{\textbackslash
   b}). The command \texttt{\textbackslash keepn} keeps the headling-like
 paragraph on the same page as the paragraph that follows it. The
-commaand \texttt{\textbackslash outlinelevel1} is one of the few structural
+command \texttt{\textbackslash outlinelevel1} is one of the few structural
 mark-up commands in RTF and facilitates document navigation.\footnote{MS Word has
   a ``navigation pane'' and paragraphs with \texttt{\textbackslash outlinelevel\emph{N}}
-  show up in this pane.}xxxx
+  show up in this pane.}
 \begin{verbatim}
 {\pard \sb120 \sa120 \f1 \fs32 \b \keepn \outlinelevel1
 Introduction
 \par}
 \end{verbatim}
 
-The mark-up is readable but verbose. One simple
-solution is to come up with some macro-like
-substitutions and write an \textsf{R} function to
-``preprocess'' the using text substitutions.
-For example, one could write \texttt{\textbackslash paragraph} in
-documentation chunks and use \textsf{R} to replace this pseudo command with
-valid RTF commands to specify, for example, $120/20=6$ points of space before
-and after the paragraph, and text set in font zero at 12 points. Here is a 
-simple example.
+RTF mark-up \emph{is} readable but verbose. One simple
+solution to the verbosity is to create macro-like
+substitutions. For example, one could define a macro-like command of
+\texttt{\textbackslash paragraph} and then write paragraphs such as this:
+
+\begin{verbatim}
+{\paragraph
+A short paragraph.
+\par}
+\end{verbatim}
+
+The file could then be% and write an \textsf{R} function to
+``preprocessed'' using text substitutions.
+
+%% For example, one could write \texttt{\textbackslash paragraph} in
+%% documentation chunks and use \textsf{R} to replace this pseudo command with
+%% valid RTF commands to specify, for example, $120/20=6$ points of space before
+%% and after the paragraph, and text set in font zero at 12 points.
+For example, here is a simple function to read an RTF file,
+replace ``\texttt{\textbackslash paragraph}'' with valid RTF mark-up, and write
+out the result.
+
 
 <<>>=
 preprocess <- function(original.rtf, new.rtf){
@@ -209,9 +226,25 @@ preprocess <- function(original.rtf, new.rtf){
 
 With these kind of substitutions specifying paragraphs, sections,
 subsections, etc, the document can be made more readable and much
-easier to write. 
+easier to write. One limitation of these simple text substitutions
+is that the ending \texttt{\textbackslash par} command and closing
+curly bracket is still needed.
 
-There is a ``short cut'' form to a paragraph which is just text ending
+Unlike \LaTeX, RTF paragraphs need some markup. For example, in \LaTeX
+the following text would constitute three paragraphs:
+
+\begin{verbatim}
+This is paragraph 1.
+
+This is paragraph 2.
+
+This is paragraph 3.
+\end{verbatim}
+
+However, in RTF that the text would consitute a single (possibly partial) paragraph
+that displayed like this: ``This is paragraph 1.This is paragraph 2.This is paragraph 3.''
+
+RTF does have a ``short cut'' form to a paragraph which is just text ending
 in a backslash. Here is an example which is analogous to 
 typing a paragraph in MS Word, hitting the return key twice, and
 typing another paragraph.
@@ -246,7 +279,8 @@ texttt{\textbackslash pngblip}.
 44ae 4260 8200}\par}
 \end{verbatim}
 
-This type of hexdump can be generated as follows.
+This type of hexdump can be generated as follows. (Note the artificially low
+resolution of the PNG figure in this example.)
 <<>>=
 tmp <- tempfile()
 png(tmp, height = 2, width = 2, units = "in", res = 10)
@@ -258,15 +292,19 @@ hex <- readBin(tmp, what = "raw", size)
 cat(hex, fill = 60, sep = " ")
 @ 
 
-The good news is that \pkg{rtfSweave} handles this. Like in
+The good news is that \pkg{rtfSweave} handles this for the user. Like in
 Sweave, code chunks just need \texttt{fig = TRUE} (or
-\texttt{fig = true}. There is also an option invoked
+\texttt{fig = true}). There is also an option invoked
 with \texttt{hex = FALSE} which will skip the hex dump and
 instead use an
 \texttt{INCLUDEPICTURE} RTF field instruction which
 is an analog to a \LaTeX \texttt{\textbackslash includegraphics}
-command. This makes for a smaller document but special steps
-need to be taken to embed the figures in the document.
+command. This makes for a smaller RTF file (since the figures
+are not part of the file) but special steps
+need to be taken to embed the figures in the document. I recommend
+staying with \texttt{hex = FALSE} since the \texttt{INCLUDEPICTURE}
+approach is not very robust and does not make it easy to honor
+figure sizes.
 
 \section{Tables}
 
@@ -303,7 +341,8 @@ the third cell's right margin is at 4320 twips (3 inches).
 \section{Using \pkg{rtfSweave}}
 
 At present, the \pkg{rtfSweave} simply provides a driver so
-that \code{Sweave} can process an RTF file. Assuming that
+that \code{Sweave} can process a file with R code chunks and RTF
+documentation chunks. Assuming that
 the file with text and code is \texttt{myreport.Rrtf},
 the commands to process the file are
 \begin{verbatim}
