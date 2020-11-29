@@ -15,6 +15,6 @@ Description: An Sweave driver that allows the user to use Sweave to create
  with LaTeX. 
 License: GPL (>= 2)
 Imports: utils, grDevices
-Suggests: knitr
+Suggests:
 BuildVignettes: yes
 NeedsCompilation: no
