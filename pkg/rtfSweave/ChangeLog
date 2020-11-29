@@ -1,3 +1,7 @@
+2020-11-29  Stephen Weigand  <Weigand.Stephen@mayo.edu>
+
+	* vignettes/rtfSweave-intro.Rnw edited for clarity
+
 2016-12-26  Stephen Weigand  <Weigand.Stephen@mayo.edu>
 
 	* R/rtf.options.R added to control options
