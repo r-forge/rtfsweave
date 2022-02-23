@@ -1,8 +1,8 @@
 Package: rtfSweave
 Type: Package
 Title: An Sweave Driver to Process Files with R Code and RTF Text
-Version: 0.6-0
-Date: 2020-11-29 
+Version: 0.7-0
+Date: 2021-02-16
 Authors@R: c(person(given = "R Core Team", role = c("aut", "cph")),
              person(given = "Stephen", family = "Weigand", role = c("aut", "cre"),
                     email = "Weigand.Stephen@mayo.edu"))
@@ -10,9 +10,10 @@ Maintainer: Stephen Weigand <Weigand.Stephen@mayo.edu>
 Description: An Sweave driver that allows the user to use Sweave to create
  documents having R code chunks and Rich Text Format (RTF) documentation chunks. 
  After Sweave()ing the file, the output is an RTF document that can be opened in
- word processors like Microsoft Word. This approach may be useful for people who 
- collaborate primarily with Word users but would otherwise prefer to use Sweave
- with LaTeX. 
+ Microsoft Word and saved as a DOC or DOCX file. This approach may be useful
+ for those (a) targeting Microsoft Word output, (b) needing a high degree of control
+ over the formatting of the document, and (c) willing to embrace the LaTeX-like
+ markup of RTF.
 License: GPL (>= 2)
 Imports: utils, grDevices
 Suggests:

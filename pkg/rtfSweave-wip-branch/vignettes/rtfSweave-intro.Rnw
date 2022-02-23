@@ -42,8 +42,10 @@ In this sense, RTF is somewhat similar to HTML or \LaTeX. RTF was
 developed by Microsoft and is tightly integrated into Microsoft Word
 (MS Word), so much so that RTF is essentially a text-based interface
 to Word documents. If you are creating a statistical report for an MS
-Word user, there may be an advantage to writing the RTF directly
-rather than using a document conversion program.
+Word user and want fine control over the format of the document,
+there may be an advantage to writing the RTF directly
+rather than using a system that involves converting one output format
+to a  document conversion program.
 Still, this should not be taken as arguing that RTF is a replacement
 for \LaTeX. 
 %While other

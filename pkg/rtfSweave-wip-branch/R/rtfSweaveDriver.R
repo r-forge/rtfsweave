@@ -198,11 +198,16 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
             }
             leading <- max(leading, 1L) # safety check
             ## RTF line break without a new paragraph is '\line'
-            cat("\n", paste(getOption("prompt"), dce[seq_len(leading)], "\\line",
+            cat("\n", paste(getOption("prompt"),
+                            ## Need to escape curly braces
+                            gsub("(\\{|\\})", "\\\\\\1", dce[seq_len(leading)]),
+                            "\\line",
                             sep = "", collapse = "\n"),
                 file = chunkout, sep = "")
             if (length(dce) > leading)
-                cat("\n", paste(getOption("continue"), dce[-seq_len(leading)], "\\line",
+                cat("\n", paste(getOption("continue"),
+                                gsub("(\\{|\\})", "\\\\\\1", dce[-seq_len(leading)]),
+                                "\\line",
                                 sep = "", collapse = "\n"),
                     file = chunkout, sep = "")
             linesout[thisline + seq_along(dce)] <<- srcline
