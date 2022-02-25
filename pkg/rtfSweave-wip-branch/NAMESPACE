@@ -1,4 +1,0 @@
-export(RweaveRtf,
-       SweaveSyntaxRtf,
-       RtangleRtf)
-import(utils, grDevices)
