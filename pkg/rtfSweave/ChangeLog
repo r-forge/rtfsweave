@@ -1,3 +1,6 @@
+2022-02-24  Stephen Weigand  <Weigand.Stephen@mayo.edu>
+	* Curly brackets are now escaped in code output
+	* Added a test of this
 2020-11-29  Stephen Weigand  <Weigand.Stephen@mayo.edu>
 
 	* vignettes/rtfSweave-intro.Rnw edited for clarity
