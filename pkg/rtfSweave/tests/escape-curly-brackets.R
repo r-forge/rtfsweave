@@ -1,8 +1,7 @@
-## Test whether curly brackets are escaped when code chunks have `echo = true`
+## Test whether curly brackets are escaped in RTF output when code
+## chunks have `echo = true`
 
-require(rtfSweave)
-require(utils)
-require(tools)
+library(rtfSweave)
 
 temp.rtf <- tempfile(fileext = ".rtf")
 
@@ -15,7 +14,9 @@ Sweave(file = system.file("tests", "escape-curly-brackets.Rrtf", package = "rtfS
        output = temp.rtf)
 
 
-hash.observed <- md5sum(temp.rtf)
-hash.expected <- md5sum(system.file("tests", "escape-curly-brackets.rtf", package = "rtfSweave"))
+lines.observed <- readLines(temp.rtf)
+lines.expected <- readLines(system.file("tests", "escape-curly-brackets.rtf", package = "rtfSweave"))
 
-stopifnot(hash.observed == hash.expected)
+stopifnot(all.equal(lines.observed, lines.expected))
+
+file.remove(temp.rtf)

@@ -1,0 +1,12 @@
+{\rtf1\ansi\deff0
+{\fonttbl{\f0\froman Times New Roman;}{\f1\fswiss Arial;}{\f2\fmodern Courier New;}}
+
+{\pard
+Test whether a compressed TIFF is written to disk
+\par}
+
+<<fig = true, png = false, tiff = true, height = 4, width = 5, resolution = 100>>=
+plot(1,1)
+@
+
+}

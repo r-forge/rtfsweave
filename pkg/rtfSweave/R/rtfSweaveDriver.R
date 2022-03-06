@@ -57,8 +57,9 @@ RweaveRtfSetup <-
 
     options <- list(prefix = TRUE, prefix.string = prefix.string,
                     engine = "R", print = FALSE, eval = TRUE, fig = FALSE,
-                    png = TRUE, jpeg = FALSE, wmf = FALSE, hex = TRUE,
+                    png = TRUE, jpeg = FALSE, tiff = FALSE, wmf = FALSE, hex = TRUE,
                     grdevice = "", width = 6, height = 6, resolution = 300,
+                    compression = "lzw", # for tiff(...)
                     pointsize = 12,
                     rtf.Schunk  = "\\ql \\sb120 \\sa120",
                     rtf.Sinput  = "\\b0 \\f2 \\fs20 \\i",
@@ -100,6 +101,12 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
                             width = width, height = height,
                             pointsize = options$pointsize,
                             res = options$resolution, units = "in")
+        tiff.Swd <- function(name, width, height, options, ...)
+            grDevices::tiff(filename = paste(chunkprefix, "tiff", sep = "."),
+                            width = width, height = height,
+                            pointsize = options$pointsize,
+                            res = options$resolution, units = "in",
+                            compression = options$compression)
         wmf.Swd <- function(name, width, height, options, ...)
             grDevices::win.metafile(filename = paste(chunkprefix, "wmf", sep = "."),
                                     width = width, height = height,
@@ -115,6 +122,10 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
             }
             if (options$jpeg) {
                 devs <- c(devs, list(jpeg.Swd))
+                devoffs <- c(devoffs, list(grDevices::dev.off))
+            }
+            if (options$tiff) {
+                devs <- c(devs, list(tiff.Swd))
                 devoffs <- c(devoffs, list(grDevices::dev.off))
             }
             if (options$wmf) {
@@ -142,6 +153,7 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
                 if (options$fig) {
                     if (options$png) cat(" png")
                     if (options$jpeg) cat(" jpeg")
+                    if (options$tiff) cat(" tiff")                    
                     if (options$wmf) cat(" wmf")
                     if (!is.null(options$grdevice)) cat("", options$grdevice)
                 }
@@ -412,6 +424,13 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
             }
 
             if (options$include) {
+                ## TIFFs can't be embedded in an RTF the way PNGs or JPEGs
+                ## can so if we have <<... tiff = true ...>>= it means the
+                ## user wants the TIFF written to disk. So we keep this
+                ## tiff conditional out of the if ... else blocks
+                if (options$tiff) {
+                    imagefilename <- paste(chunkprefix, "tiff", sep = ".")
+                }
                 if (options$png) {
                     imagefilename <- paste(chunkprefix, "png", sep = ".")
                     if(options$hex) {
