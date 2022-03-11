@@ -4,7 +4,7 @@
 ##  Written by Stephen Weigand <Weigand.Stephen@mayo.edu>    ##
 ###############################################################
 ##  
-##  Copyright (C) 1995-2014 The R Core Team
+##  Copyright (C) 1995-2021 The R Core Team
 ##
 ##  This program is free software; you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -20,11 +20,6 @@
 ##  http://www.r-project.org/Licenses/
 ##
 ###############################################################
-
-## Things to worry about:
-## - RTF spec says encoding must be 7 bit ASCII. I can possibly
-##   check that and give a warning.
-
 
 RweaveRtf <- function()
 {
@@ -43,6 +38,17 @@ RweaveRtfSetup <-
     function(file, syntax, output = NULL, quiet = FALSE, debug = FALSE,
              ...)
 {
+    
+    ## RTF spec says encoding must be 7 bit ASCII. This will print
+    ## out any non-ASCII characters in the file and stop
+    if (length(tools::showNonASCIIfile(file))) {
+        stop("File ", sQuote(file), "\n",
+             "       has non-ASCII characters on the lines shown above\n",
+             "       which need to be removed to prevent corrupting the RTF\n",
+             "       output file. You can use ", sQuote("tools::showNonASCIIfile"),
+             ".")
+    }
+
     dots <- list(...)
     if (is.null(output)) {
         prefix.string <- basename(sub(syntax$extension, "", file))
@@ -55,20 +61,36 @@ RweaveRtfSetup <-
     if (encoding %in% c("ASCII", "bytes")) encoding <- ""
     output <- file(output, open = "w", encoding = encoding)
 
-    options <- list(prefix = TRUE, prefix.string = prefix.string,
-                    engine = "R", print = FALSE, eval = TRUE, fig = FALSE,
-                    png = TRUE, jpeg = FALSE, tiff = FALSE, wmf = FALSE, hex = TRUE,
-                    grdevice = "", width = 6, height = 6, resolution = 300,
-                    compression = "lzw", # for tiff(...)
+    options <- list(prefix = TRUE,
+                    prefix.string = prefix.string,
+                    engine = "R",
+                    print = FALSE,
+                    eval = TRUE,
+                    fig = FALSE,
+                    png = TRUE,
+                    jpeg = FALSE,
+                    tiff = FALSE,
+                    wmf = FALSE,
+                    width = 6,
+                    height = 6,
+                    resolution = 300,
                     pointsize = 12,
+                    compression = "lzw", # for tiff(...)
+                    hex = TRUE,
+                    grdevice = "",
                     rtf.Schunk  = "\\ql \\sb120 \\sa120",
                     rtf.Sinput  = "\\b0 \\f2 \\fs20 \\i",
                     rtf.Soutput = "\\b0 \\f2 \\fs20",
-                    term = TRUE, echo = TRUE, keep.source = TRUE,
+                    term = TRUE,
+                    echo = TRUE,
+                    keep.source = TRUE,
                     results = "verbatim",
-                    split = FALSE, strip.white = "true", include = TRUE,
+                    split = FALSE,
+                    strip.white = "true",
+                    include = TRUE,
                     expand = TRUE, # unused by us, for 'highlight'
-                    concordance = FALSE, figs.only = TRUE)
+                    concordance = FALSE,
+                    figs.only = TRUE)
     options$.defaults <- options
     options[names(dots)] <- dots
 

@@ -14,7 +14,7 @@ Description: An Sweave driver that allows the user to use Sweave to create
  who want a lot of control over the document format and do not mind writing
  RTF markup.
 License: GPL (>= 2)
-Imports: utils, grDevices
+Imports: tools, utils, grDevices
 Suggests:
 BuildVignettes: yes
 NeedsCompilation: no
