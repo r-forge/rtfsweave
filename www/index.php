@@ -43,9 +43,15 @@ echo $contents; } ?>
 
 <!-- end of project description -->
 
-<p> No content added. </p>
+<p> The <strong>project summary page</strong> you can find
+  <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/"><strong>here</strong></a>.
+</p>
 
-<p> The <strong>project summary page</strong> you can find <a href="http://<?php echo $domain; ?>/projects/<?php echo $group_name; ?>/"><strong>here</strong></a>. </p>
+<!-- From  https://stackoverflow.com/questions/12294120/how-to-embed-html-files-in-php-code    
+     The file `test.html` was generated with `fossil test-markdown-render test.md > test.html` -->
+<?php
+readfile('./test.html');
+?>
 
 </body>
 </html>
