@@ -28,7 +28,7 @@ SweaveSyntaxRtf
   convert \file{*.Rnw} input files to LaTeX output files. However,
   \code{\link{Sweave}} was designed to allow authors to write their own
   drivers. The \pkg{rtfSweave} drivers documented here are essentially a
-  copies of the \code{\link{RweaveLatex}} and \code{\link{RtangleLatex}}
+  copies of the \code{\link{RweaveLatex}} and \code{\link{Rtangle}}
   drivers with some necessary changes to make them work for rich text
   format (RTF) documents.
 
@@ -278,7 +278,7 @@ SweaveSyntaxRtf
   demonstrated in the examples.
 
   Since \code{\link{Sweave}} provides \code{\link{RweaveLatex}} and
-  \code{\link{RtangleLatex}}, the respective drivers for RTF are named
+  \code{\link{Rtangle}}, the respective drivers for RTF are named
   \code{RweaveRtf()} and \code{RtangleRtf}.
     
 }
