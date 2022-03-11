@@ -17,3 +17,9 @@ install:
 clean:
 	rm -Rf pkg/rtfSweave.Rcheck
 	rm -f pkg/rtfSweave_*.tar.gz
+
+.PHONY: web
+web: content.html
+content.html: content.md
+	cd www; fossil test-markdown-render content.md > content.html
+

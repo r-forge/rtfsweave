@@ -50,8 +50,11 @@ echo $contents; } ?>
 <!-- From  https://stackoverflow.com/questions/12294120/how-to-embed-html-files-in-php-code    
      The file `test.html` was generated with `fossil test-markdown-render test.md > test.html` -->
 <?php
-readfile('./test.html');
+readfile('./content.html');
 ?>
+
+<?php echo 'PHP version: ' . phpversion();?>
 
 </body>
 </html>
+ 
