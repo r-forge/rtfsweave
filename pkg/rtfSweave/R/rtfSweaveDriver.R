@@ -637,7 +637,8 @@ RweaveRtfOptions <- function(options)
         if (is.null(x)) FALSE else suppressWarnings(as.logical(x))
 
     ## numeric
-    NUMOPTS <- c("width", "height", "resolution", "pointsize")
+    NUMOPTS <- c("width", "height", "resolution", "pointsize",
+                 "tiff.resolution")
 
     ## character: largely for safety, but 'label' matters as there
     ## is no default (and someone uses "F")
