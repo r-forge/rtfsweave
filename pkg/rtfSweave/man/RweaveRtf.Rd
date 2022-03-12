@@ -37,11 +37,11 @@ SweaveSyntaxRtf
   Emacs or another text editor. While the RTF files written by Microsoft
   Word are difficult to read, without loss of functionality one can
   write very human-readable RTF documents which can be opened in
-  Microsoft Word and then saved as a native DOC or DOCX file. One can
-  write RTF documents with headings, subheadings, headers, footers,
-  complex tables, figures, etc. It may be helpful to think of RTF as a
-  text-based interface to nearly all of Microsoft Word's document
-  formatting functionality.
+  Microsoft Word and then saved as a native \file{*.docx} or
+  \file{*.doc} file. One can write RTF documents with headings,
+  subheadings, headers, footers, complex tables, figures, etc. It may be
+  helpful to think of RTF as a text-based interface to nearly all of
+  Microsoft Word's document formatting functionality.
   
   My motivation for creating RTF drivers for \code{\link{Sweave}} was
   that my non-statistician colleagues, collaborators, and clients almost
@@ -127,15 +127,20 @@ SweaveSyntaxRtf
 
   \item{\code{width}}{width of the figure in inches with a default of 6.}
 
+  \item{\code{pointsize}}{pointsize for figures defaulting to 12.}
+
   \item{\code{resolution}}{resolution of the figure with a default of
     300 dpi. Note the name of the option here is the full-length word
     \code{resolution} and does not match the argument in
     \code{\link{png}}, \code{\link{jpeg}}, etc. which use the shorter
     \code{res}.}
 
-  \item{\code{pointsize}}{pointsize for figures defaulting to 12.}
+  \item{\code{tiff.resolution}}{resolution of the TIFF figures with a default of
+    300 dpi. The reason that TIFFs have their own resolution argument
+    is to allow the author to have lower resolution images in the RTF
+    output file while writing out higher-resolution TIFFs.}
 
-  \item{\code{compression}}{type of comperssion for TIFF figures
+  \item{\code{tiff.compression}}{type of compression for TIFF figures
     defaulting to \code{"lzw"}. See \code{\link{tiff}} for the types of
     compression available. If one is using TIFFs for uploading to a
     journal website and the TIFF is not accepted by the uploader, it may

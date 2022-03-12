@@ -5,7 +5,7 @@
 Test whether a compressed TIFF is written to disk
 \par}
 
-<<fig = true, png = false, tiff = true, height = 4, width = 5, resolution = 100>>=
+<<fig = true, png = false, tiff = true, height = 4, width = 5, tiff.resolution = 100>>=
 plot(1,1)
 @
 

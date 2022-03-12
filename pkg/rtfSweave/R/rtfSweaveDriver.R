@@ -73,9 +73,10 @@ RweaveRtfSetup <-
                     wmf = FALSE,
                     width = 6,
                     height = 6,
-                    resolution = 300,
                     pointsize = 12,
-                    compression = "lzw", # for tiff(...)
+                    resolution = 300,
+                    tiff.resolution = 300,                    
+                    tiff.compression = "lzw", 
                     hex = TRUE,
                     grdevice = "",
                     rtf.Schunk  = "\\ql \\sb120 \\sa120",
@@ -127,8 +128,8 @@ makeRweaveRtfCodeRunner <- function(evalFunc = RweaveEvalWithOpt)
             grDevices::tiff(filename = paste(chunkprefix, "tiff", sep = "."),
                             width = width, height = height,
                             pointsize = options$pointsize,
-                            res = options$resolution, units = "in",
-                            compression = options$compression)
+                            res = options$tiff.resolution, units = "in",
+                            compression = options$tiff.compression)
         wmf.Swd <- function(name, width, height, options, ...)
             grDevices::win.metafile(filename = paste(chunkprefix, "wmf", sep = "."),
                                     width = width, height = height,
