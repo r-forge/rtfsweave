@@ -8,4 +8,31 @@
 has background information and links to various RTF-related tools</p></li>
 </ul>
 
+<h2>Frequently asked questions</h2>
+<h3>Why would I use <code>rtfSweave</code>?</h3>
+<p>Most people would rather use Rmarkdown but if you (a) have Microsoft
+Word, (b) you need to generate a Word document, (c) would like a lot
+of control over the document formatting, and (d) do not mind fiddling
+a little with RTF, then maybe this is a reason to use <code>rtfSweave</code>.</p>
+
+<p>The trade-offs include the following:</p>
+
+<ul>
+<li><p>RTF markup is not clean and elegant like Markdown</p></li>
+<li><p>There is only one output format available: RTF. You don't get
+multiple formats "for free" as with Rmarkdown</p></li>
+</ul>
+
+<!-- ### What do you mean "a lot of control over the document formatting"? -->
+
+<!-- Sometimes it is nice to specify where a pagebreak goes (use `\page`), -->
+
+<h3>Should I save RTF file to a native Word format like <code>*.docx</code>?</h3>
+<p>If you have Microsoft Word, yes. It is important to save as <code>*.docx</code>
+(or <code>*.doc</code>) <em>before</em> making any edits to the RTF file. The reason is
+that if you edit the RTF and save the file (as RTF) the file size
+balloons (often to 100 megabytes or more) because Word is inserting an
+enormous number of its own RTF commands. The easy way to avoid this is
+to save the RTF file as <code>*.docx</code> and <em>then</em> edit it.</p>
+
 </div>

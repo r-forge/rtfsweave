@@ -19,7 +19,7 @@ clean:
 	rm -f pkg/rtfSweave_*.tar.gz
 
 .PHONY: web
-web: content.html
-content.html: content.md
+web: www/content.html
+www/content.html: www/content.md
 	cd www; fossil test-markdown-render content.md > content.html
 
