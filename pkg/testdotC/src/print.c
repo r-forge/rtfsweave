@@ -4,8 +4,7 @@
 #include <R_ext/Print.h>
 #include <R_ext/Rdynload.h>
 
-static void
-print123(void) {
+void print123(void) {
   Rprintf("Hello from .C!\n");
 }
 
@@ -14,8 +13,7 @@ print123(void) {
  */
 #include <R_ext/Rdynload.h>
 
-static const
-R_CMethodDef cMethods[] = {
+static const R_CMethodDef cMethods[] = {
   {"print123", (DL_FUNC) &print123, 0},
   {NULL, NULL, 0}
 };

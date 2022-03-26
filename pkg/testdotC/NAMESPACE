@@ -1,2 +1,2 @@
 export(dotC)
-useDynLib(testdotC)
+useDynLib(testdotC, print123)
