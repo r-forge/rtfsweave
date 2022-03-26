@@ -1,9 +1,9 @@
-Package: dotC
+Package: testdotC
 Type: Package
-Title: Learning the .C interface function
+Title: Learning The .C Interface Function
 Version: 1.0
 Date: 2022-03-25
-Author: person(given = "Stephen", family = "Weigand", role = c("aut", "cre"),
+Authors@R: person(given = "Stephen", family = "Weigand", role = c("aut", "cre"),
                email = "Weigand.Stephen@mayo.edu")
 Maintainer: Stephen Weigand <Weigand.Stephen@mayo.edu>
 Description: This package is an attempt to learn and document
