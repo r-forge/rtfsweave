@@ -1,4 +1,4 @@
 dotC <- function(filename) {
-    .C("print123", PACKAGE = "testdotC")
+    .C(print123)
 }
                        
