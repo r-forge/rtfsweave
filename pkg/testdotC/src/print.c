@@ -23,5 +23,6 @@ R_CMethodDef cMethods[] = {
 
 void R_init_testdotC(DllInfo *dll) {
     R_registerRoutines(dll, cMethods, NULL, NULL, NULL);
-    /* R_useDynamicSymbols(dll, FALSE); */
+    R_useDynamicSymbols(dll, FALSE);
+    R_forceSymbols(dll, TRUE);
 }
