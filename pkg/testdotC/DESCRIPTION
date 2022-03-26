@@ -9,4 +9,4 @@ Maintainer: Stephen Weigand <Weigand.Stephen@mayo.edu>
 Description: This package is an attempt to learn and document
  for myself the .C interface function.
 License: GPL (>= 2)
-NeedsCompilation: no
+NeedsCompilation: yes

@@ -1,3 +1,4 @@
 dotC <- function(filename) {
-    message("That is a filename")
+    .C("print123", PACKAGE = "testdotC")
 }
+                       
