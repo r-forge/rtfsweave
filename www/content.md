@@ -30,15 +30,27 @@ The trade-offs include the following:
 
 <!-- Sometimes it is nice to specify where a pagebreak goes (use `\page`), -->
 
-
 ### Should I save RTF file to a native Word format like `*.docx`?
 
-If you have Microsoft Word, yes. It is important to save as `*.docx`
-(or `*.doc`) _before_ making any edits to the RTF file. The reason is
-that if you edit the RTF and save the file (as RTF) the file size
-balloons (often to 100 megabytes or more) because Word is inserting an
-enormous number of its own RTF commands. The easy way to avoid this is
-to save the RTF file as `*.docx` and _then_ edit it.
+If you have Microsoft Word, yes. It is important to save the RTF file
+as `*.docx` (or `*.doc`) _before_ making any edits to the RTF
+file. The reason is that if you edit the RTF and save the file (as
+RTF) the file size balloons (often to 100 megabytes or more) because
+Word is inserting an enormous number of its own RTF commands. The easy
+way to avoid this is to save the RTF file as `*.docx` and _then_ edit
+it.
+
+### What's the worst part about using RTF?
+
+It's very easy to have unbalanced curly brackets in the RTF file and
+this usually means the file cannot be opened. And sometimes it's hard
+to find the problem.
+
+### Why is some of my RTF file not showing up?
+
+An RTF file opens with `{\rtf1` and ends as soon as that opening curly
+bracket is closed with a `}`. If there is content after that closing curly bracket
+it won't show up. 
 
 
 
