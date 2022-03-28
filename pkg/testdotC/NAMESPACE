@@ -1,2 +1,2 @@
 export(dotC)
-useDynLib(testdotC, print123)
+useDynLib(testdotC, check_rtf_brackets)

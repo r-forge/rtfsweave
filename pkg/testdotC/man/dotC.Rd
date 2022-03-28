@@ -23,9 +23,10 @@ Stephen Weigand <weigand.stephen@mayo.edu>
 
 \examples{
 
-tfile <- tempfile()
-writeLines(LETTERS, tfile)
-dotC(tfile)
+file.rtf <- tempfile(fileext = ".rtf")
+cat("Hello, RTF", file = file.rtf)
+dotC(file.rtf)
+file.remove(file.rtf)
 
 }
 

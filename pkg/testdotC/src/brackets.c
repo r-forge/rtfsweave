@@ -4,17 +4,24 @@
 #include <R_ext/Print.h>
 #include <R_ext/Rdynload.h>
 
-void print123(void) {
-  Rprintf("Hello from .C!\n");
+void check_rtf_brackets(const char **filename) {
+
+  FILE *infile;
+
+  if ((infile = fopen(filename[0], "r")) == NULL) {
+    Rprintf("Cannot open '%s' to check brackets\n", filename[0]);
+  } else {
+    Rprintf("Able to open '%s' to check brackets\n", filename[0]);
+  }
+
 }
 
 /* Guided by https://svn.r-project.org/R/trunk/src/library/splines/src/splines.c  
  * and https://www.r-project.org/doc/Rnews/Rnews_2001-3.pdf
  */
-#include <R_ext/Rdynload.h>
 
 static const R_CMethodDef cMethods[] = {
-  {"print123", (DL_FUNC) &print123, 0},
+  {"check_rtf_brackets", (DL_FUNC) &check_rtf_brackets, 1},
   {NULL, NULL, 0}
 };
 
