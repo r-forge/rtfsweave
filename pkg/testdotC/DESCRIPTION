@@ -1,8 +1,8 @@
 Package: testdotC
 Type: Package
 Title: Learning The .C Interface Function
-Version: 1.0
-Date: 2022-03-25
+Version: 0.0.1
+Date: 2022-03-28
 Authors@R: person(given = "Stephen", family = "Weigand", role = c("aut", "cre"),
                email = "Weigand.Stephen@mayo.edu")
 Maintainer: Stephen Weigand <Weigand.Stephen@mayo.edu>
