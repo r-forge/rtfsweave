@@ -15,7 +15,9 @@ Sweave(file = system.file("tests", "escape-curly-brackets.Rrtf", package = "rtfS
 
 
 lines.observed <- readLines(temp.rtf)
-lines.expected <- readLines(system.file("tests", "escape-curly-brackets.rtf", package = "rtfSweave"))
+lines.expected <- readLines(system.file("tests",
+                                        "escape-curly-brackets.rtf",
+                                        package = "rtfSweave"))
 
 stopifnot(all.equal(lines.observed, lines.expected))
 

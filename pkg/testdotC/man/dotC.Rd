@@ -14,7 +14,8 @@ dotC(filename)
   \item{filename}{a filename}
 }
 \value{
-  Nothing. This function only prints to the console.
+  A status value for the RTF file. A status of 0 means the
+  RTF file was OK in terms of curly brackets. 
 }
 
 \author{
