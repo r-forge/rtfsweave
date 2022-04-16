@@ -16,8 +16,20 @@ check_brackets(filename)
   filename to check}
 }
 \value{
-  This function returns nothing and is useful only for the messages
-  it prints to the console about the RTF file.
+  This function returns a \dQuote{status code} of zero if
+  the RTF file checks out and has balanced curly brackets.
+  Non-zero status codes indicate a problem. These non-zero
+  status codes are as follows:
+
+  \tabular{ll}{
+    \strong{Code} \tab \strong{Meaning}\cr
+    1 \tab Cannot open the file to check curly brackets\cr
+    2 \tab File did not begin with the required \code{\{\\rtf1}\cr
+    3 \tab The curly brackets in the file nest too deeply for this program\cr
+    4 \tab A closing \code{\}} was found without a prior \code{\{}\cr
+    5 \tab The opening \code{\{\\rtf1} was never closed\cr
+    6 \tab There is an opening \code{\{} that was never closed
+  }
 }
 \details{
   An RTF file must begin with \code{\{\\rtf1} and ends as soon as that

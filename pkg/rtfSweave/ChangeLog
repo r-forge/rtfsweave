@@ -1,3 +1,7 @@
+2022-04-16  Stephen Weigand  <Weigand.Stephen@mayo.edu>
+	* The `check_brackets' R function helps with checking curly
+	brackets in an RTF file. It uses a C function which means the
+	package requires compilation.
 2022-02-24  Stephen Weigand  <Weigand.Stephen@mayo.edu>
 	* Curly brackets are now escaped in code output
 	* Added a test of this
