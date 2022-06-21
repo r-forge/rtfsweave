@@ -1,6 +1,7 @@
 export(RweaveRtf,
        SweaveSyntaxRtf,
        RtangleRtf,
-       check_brackets)
+       check_brackets,
+       quickstart)
 useDynLib(rtfSweave, check_rtf_brackets)
 import(tools, utils, grDevices)

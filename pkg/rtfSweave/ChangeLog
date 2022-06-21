@@ -1,3 +1,7 @@
+2022-06-21  Stephen Weigand  <Weigand.Stephen@mayo.edu>
+
+	* Version 0.7.5 includes the function `quickstart'
+
 2022-04-16  Stephen Weigand  <Weigand.Stephen@mayo.edu>
 	* The `check_brackets' R function helps with checking curly
 	brackets in an RTF file. It uses a C function which means the

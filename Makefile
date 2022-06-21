@@ -35,7 +35,7 @@ www/content.html: www/content.md
 
 .PHONY: buildS
 buildS:
-	cd pkg; $(R_CMD) build rtfSweave
+	cd pkg; rm rtfSweave_*.tar.gz; $(R_CMD) build rtfSweave
 
 .PHONY: checkS
 checkS:
@@ -44,5 +44,4 @@ checkS:
 .PHONY: installS
 installS:
 	cd pkg; $(R_CMD) INSTALL rtfSweave*gz
-
 
